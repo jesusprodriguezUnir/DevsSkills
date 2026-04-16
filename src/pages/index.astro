@@ -8,6 +8,12 @@ import path from 'node:path';
 const manifestPath = path.join(process.cwd(), 'src/data/skills-manifest.json');
 const skills = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 
+// Resolve download URLs with base path (for GitHub Pages subpath deployment)
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+skills.forEach((s: any) => {
+  s.downloadUrl = `${base}${s.downloadUrl}`;
+});
+
 // Compute stats
 const categories = [...new Set(skills.map((s: any) => s.category))] as string[];
 const totalSize = skills.reduce((acc: number, s: any) => acc + s.rawSize, 0);
