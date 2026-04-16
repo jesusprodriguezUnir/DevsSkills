@@ -57,6 +57,7 @@ function getBody(content) {
  */
 function detectCategory(name) {
   if (name.startsWith('openup-')) return 'OpenUP';
+  if (name.startsWith('dotnet-')) return '.NET Core';
   if (name.startsWith('pdf-')) return 'Utilidades';
   if (name.startsWith('skill-')) return 'Meta';
   return 'General';
