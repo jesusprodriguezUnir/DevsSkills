@@ -1,293 +1,443 @@
 ---
 interface Props {
-  title: string;
-  category: string;
+  id: string;
+  name: string;
   description: string;
-  rawContent: string;
-  tags?: string[];
+  category: string;
+  license: string;
+  fileCount: number;
+  rawSize: number;
+  zipSize: number;
+  subdirs: string[];
+  body: string;
+  downloadUrl: string;
+  index: number;
 }
 
-const { title, category, description, rawContent, tags = [] } = Astro.props;
+const { id, name, description, category, license, fileCount, rawSize, zipSize, subdirs, body, downloadUrl, index } = Astro.props;
+
+const categoryConfig: Record<string, { icon: string; color: string; bg: string }> = {
+  'OpenUP': { icon: '🔄', color: '#818cf8', bg: 'rgba(129, 140, 248, 0.1)' },
+  'Utilidades': { icon: '🛠️', color: '#34d399', bg: 'rgba(52, 211, 153, 0.1)' },
+  'Meta': { icon: '✨', color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.1)' },
+  'General': { icon: '📦', color: '#fb7185', bg: 'rgba(251, 113, 133, 0.1)' },
+};
+
+const cat = categoryConfig[category] || categoryConfig['General'];
+
+function formatSize(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  return `${(bytes / 1024).toFixed(1)} KB`;
+}
+
+const modalId = `modal-${id}`;
+const delay = Math.min(index * 50, 600);
 ---
 
-<div class="skill-card glass fade-in">
-  <div class="card-header">
-    <span class="category-badge">{category}</span>
-    <div class="tags">
-      {tags.map(tag => <span class="tag">#{tag}</span>)}
+<div class="skill-card glass" style={`animation-delay: ${delay}ms`} data-category={category}>
+  <div class="card-top">
+    <div class="card-header">
+      <span class="category-pill" style={`color: ${cat.color}; background: ${cat.bg}; border-color: ${cat.color}20`}>
+        <span class="cat-icon">{cat.icon}</span>
+        {category}
+      </span>
+      <span class="license-badge">{license}</span>
+    </div>
+
+    <h3 class="card-title">{name}</h3>
+    <p class="card-description">{description}</p>
+
+    <div class="card-meta">
+      <div class="meta-item" title="Archivos en la skill">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+        <span>{fileCount} {fileCount === 1 ? 'archivo' : 'archivos'}</span>
+      </div>
+      <div class="meta-item" title="Tamaño del ZIP">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>{formatSize(zipSize)}</span>
+      </div>
+      {subdirs.length > 0 && (
+        <div class="meta-item" title="Carpetas incluidas">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+          <span>{subdirs.join(', ')}</span>
+        </div>
+      )}
     </div>
   </div>
-  
-  <h3>{title}</h3>
-  <p>{description}</p>
-  
-  <div class="card-footer">
-    <button class="view-btn glass" data-modal-id={`modal-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-      Ver Skill
+
+  <div class="card-actions">
+    <button class="btn btn-ghost" data-modal-trigger={modalId}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+      Ver contenido
     </button>
-    <button 
-      class="download-btn" 
-      data-content={rawContent} 
-      data-filename={`${title.toLowerCase().replace(/\s+/g, '-')}.md`}
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Descargar
-    </button>
+    <a class="btn btn-primary" href={downloadUrl} download>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Descargar .zip
+    </a>
   </div>
 </div>
 
-<dialog id={`modal-${title.toLowerCase().replace(/\s+/g, '-')}`} class="skill-modal glass">
-  <div class="modal-content">
+<!-- Modal -->
+<dialog id={modalId} class="skill-modal">
+  <div class="modal-wrapper glass">
     <div class="modal-header">
-      <h2>{title}</h2>
-      <button class="close-btn">&times;</button>
+      <div class="modal-header-left">
+        <span class="category-pill" style={`color: ${cat.color}; background: ${cat.bg}; border-color: ${cat.color}20`}>
+          <span class="cat-icon">{cat.icon}</span>
+          {category}
+        </span>
+        <h2>{name}</h2>
+      </div>
+      <button class="modal-close" data-modal-close={modalId} aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
     </div>
     <div class="modal-body">
-      <pre><code>{rawContent}</code></pre>
+      <pre><code>{body}</code></pre>
+    </div>
+    <div class="modal-footer">
+      <a class="btn btn-primary btn-lg" href={downloadUrl} download>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar skill completa ({formatSize(zipSize)})
+      </a>
     </div>
   </div>
 </dialog>
 
 <script>
-  function setupComponents() {
-    const downloadButtons = document.querySelectorAll('.download-btn');
-    const viewButtons = document.querySelectorAll('.view-btn');
-    
-    downloadButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const target = e.currentTarget as HTMLButtonElement;
-        const content = target.getAttribute('data-content') || '';
-        const filename = target.getAttribute('data-filename') || 'skill.md';
-        
-        const blob = new Blob([content], { type: 'text/markdown' });
-        const url = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        // Visual feedback
-        const originalText = target.innerHTML;
-        target.innerHTML = '¡Listo!';
-        target.classList.add('success');
-        setTimeout(() => {
-          target.innerHTML = originalText;
-          target.classList.remove('success');
-        }, 2000);
+  function setupSkillCards() {
+    // View modals
+    document.querySelectorAll<HTMLButtonElement>('[data-modal-trigger]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.getAttribute('data-modal-trigger')!;
+        const modal = document.getElementById(modalId) as HTMLDialogElement;
+        modal?.showModal();
+        document.body.style.overflow = 'hidden';
       });
     });
 
-    viewButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const target = e.currentTarget as HTMLButtonElement;
-        const modalId = target.getAttribute('data-modal-id');
-        const modal = document.getElementById(modalId!) as HTMLDialogElement;
-        if (modal) {
-          modal.showModal();
-          document.body.style.overflow = 'hidden';
-        }
-      });
-    });
-
-    document.querySelectorAll('.close-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const modal = (e.target as HTMLElement).closest('dialog');
+    // Close buttons
+    document.querySelectorAll<HTMLButtonElement>('[data-modal-close]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.getAttribute('data-modal-close')!;
+        const modal = document.getElementById(modalId) as HTMLDialogElement;
         modal?.close();
-        document.body.style.overflow = 'auto';
+        document.body.style.overflow = '';
       });
     });
 
-    // Close on backdrop click
-    document.querySelectorAll('dialog').forEach(modal => {
+    // Click backdrop to close
+    document.querySelectorAll<HTMLDialogElement>('.skill-modal').forEach(modal => {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
           modal.close();
-          document.body.style.overflow = 'auto';
+          document.body.style.overflow = '';
         }
       });
     });
+
+    // ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.body.style.overflow = '';
+      }
+    });
   }
 
-  // Run on first load and after transitions
-  setupComponents();
-  document.addEventListener('astro:after-swap', setupComponents);
+  setupSkillCards();
+  document.addEventListener('astro:after-swap', setupSkillCards);
 </script>
 
 <style>
+  /* ─── Card ─── */
   .skill-card {
-    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
-    height: 100%;
+    padding: 1.75rem;
+    gap: 1.25rem;
+    transition: all var(--transition-smooth);
+    opacity: 0;
+    animation: cardAppear 0.5s ease-out forwards;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-glow-strong), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-smooth);
   }
 
   .skill-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent);
-    box-shadow: 0 10px 30px -10px var(--accent-glow);
+    transform: translateY(-4px);
+    border-color: var(--border-hover);
+    background: var(--card-bg-hover);
+    box-shadow: 0 12px 40px -12px rgba(129, 140, 248, 0.15);
   }
 
-  .card-header {
+  .skill-card:hover::before {
+    opacity: 1;
+  }
+
+  @keyframes cardAppear {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-top {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .category-badge {
-    background: var(--accent-glow);
-    color: var(--accent);
-    padding: 0.25rem 0.75rem;
-    border-radius: 99px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border: 1px solid rgba(99, 102, 241, 0.2);
-  }
-
-  .tags {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-  }
-
-  h3 {
-    font-size: 1.5rem;
-    color: var(--text-primary);
-  }
-
-  p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    flex-grow: 1;
-  }
-
-  .card-footer {
-    margin-top: auto;
-    display: flex;
+    flex-direction: column;
     gap: 0.75rem;
   }
 
-  .view-btn, .download-btn {
-    flex: 1;
-    padding: 0.8rem;
-    border: none;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
+  /* ─── Header ─── */
+  .card-header {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+
+  .cat-icon {
+    font-size: 0.75rem;
+  }
+
+  .license-badge {
+    font-size: 0.65rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+
+  /* ─── Content ─── */
+  .card-title {
+    font-size: 1.15rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .card-description {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ─── Meta ─── */
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+  }
+
+  .meta-item svg {
+    opacity: 0.6;
+  }
+
+  /* ─── Actions ─── */
+  .card-actions {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: auto;
+  }
+
+  .btn {
+    flex: 1;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    transition: all 0.2s ease;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
   }
 
-  .view-btn {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
+  .btn-ghost {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
     border: 1px solid var(--border-color);
   }
 
-  .view-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--text-secondary);
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
   }
 
-  .download-btn {
-    background: var(--text-primary);
-    color: var(--bg-color);
-  }
-
-  .download-btn:hover {
+  .btn-primary {
     background: var(--accent);
     color: white;
-    transform: translateY(-2px);
   }
 
-  /* Modal Styles */
+  .btn-primary:hover {
+    background: var(--accent-bright);
+    color: #0e0e14;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(129, 140, 248, 0.35);
+  }
+
+  .btn-lg {
+    padding: 0.85rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* ─── Modal ─── */
   .skill-modal {
     padding: 0;
-    max-width: 800px;
-    width: 90%;
-    max-height: 80vh;
-    border-color: rgba(99, 102, 241, 0.3);
-    color: white;
+    max-width: 900px;
+    width: 92%;
+    max-height: 85vh;
+    border: none;
+    background: transparent;
     outline: none;
   }
 
   .skill-modal::backdrop {
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
   }
 
-  .modal-content {
+  .skill-modal[open] {
+    animation: modalIn 0.3s ease-out;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-wrapper {
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 2rem;
+    max-height: 85vh;
+    overflow: hidden;
   }
 
   .modal-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+    align-items: flex-start;
+    padding: 1.75rem 2rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
   }
 
-  .modal-header h2 {
-    font-size: 1.8rem;
-    color: var(--accent);
+  .modal-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
-  .close-btn {
-    background: none;
-    border: none;
+  .modal-header-left h2 {
+    font-size: 1.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .modal-close {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
     color: var(--text-secondary);
-    font-size: 2rem;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
   }
 
   .modal-body {
+    flex: 1;
     overflow-y: auto;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
   }
 
-  pre {
+  .modal-body pre {
     white-space: pre-wrap;
-    word-break: break-all;
-    font-family: 'Inter', monospace;
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: #d1d1d1;
+    word-break: break-word;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
   }
 
-  .download-btn.success {
-    background: #10b981;
-    color: white;
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.25rem 2rem;
+    border-top: 1px solid var(--border-color);
   }
 
-  svg {
-    transition: transform 0.2s ease;
-  }
+  @media (max-width: 600px) {
+    .skill-card {
+      padding: 1.25rem;
+    }
 
-  .download-btn:hover svg {
-    transform: translateY(2px);
+    .card-actions {
+      flex-direction: column;
+    }
+
+    .modal-header, .modal-body, .modal-footer {
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
   }
 </style>

@@ -6,12 +6,15 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "build:skills": "node scripts/build-skill-zips.mjs",
+    "dev": "node scripts/build-skill-zips.mjs && astro dev",
+    "build": "node scripts/build-skill-zips.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@types/archiver": "^7.0.0",
+    "archiver": "^7.0.1",
     "astro": "^6.1.7"
   }
 }

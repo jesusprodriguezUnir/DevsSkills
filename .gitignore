@@ -3,6 +3,10 @@ dist/
 # generated types
 .astro/
 
+# generated skill downloads & manifest
+public/downloads/
+src/data/
+
 # dependencies
 node_modules/
 
