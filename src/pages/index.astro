@@ -4,19 +4,34 @@ import SkillCard from '../components/SkillCard.astro';
 import fs from 'node:fs';
 import path from 'node:path';
 
+interface Skill {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  license: string;
+  compatibility: string | null;
+  fileCount: number;
+  rawSize: number;
+  zipSize: number;
+  subdirs: string[];
+  body: string;
+  downloadUrl: string;
+}
+
 // Read the generated manifest
 const manifestPath = path.join(process.cwd(), 'src/data/skills-manifest.json');
-const skills = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+const skills: Skill[] = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 
 // Resolve download URLs with base path (for GitHub Pages subpath deployment)
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-skills.forEach((s: any) => {
+skills.forEach((s) => {
   s.downloadUrl = `${base}${s.downloadUrl}`;
 });
 
 // Compute stats
-const categories = [...new Set(skills.map((s: any) => s.category))] as string[];
-const totalSize = skills.reduce((acc: number, s: any) => acc + s.rawSize, 0);
+const categories = [...new Set(skills.map((s) => s.category))];
+const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
 ---
 
 <Layout title="DevSkills Hub — Catálogo de Skills para Agentes IA">
@@ -63,6 +78,7 @@ const totalSize = skills.reduce((acc: number, s: any) => acc + s.rawSize, 0);
         <input
           type="text"
           id="skill-search"
+          aria-label="Buscar skills"
           placeholder="Buscar skills por nombre o descripción..."
           autocomplete="off"
         />
@@ -74,8 +90,8 @@ const totalSize = skills.reduce((acc: number, s: any) => acc + s.rawSize, 0);
           Todas
           <span class="filter-count">{skills.length}</span>
         </button>
-        {categories.map((cat: string) => {
-          const count = skills.filter((s: any) => s.category === cat).length;
+        {categories.map((cat) => {
+          const count = skills.filter((s) => s.category === cat).length;
           return (
             <button class="filter-btn" data-filter={cat}>
               {cat}
@@ -90,11 +106,11 @@ const totalSize = skills.reduce((acc: number, s: any) => acc + s.rawSize, 0);
     <section class="skills-section">
       <div class="grid-header">
         <h2>Skills Disponibles</h2>
-        <span id="visible-count" class="visible-count">{skills.length} de {skills.length}</span>
+        <span id="visible-count" class="visible-count" aria-live="polite" aria-atomic="true">{skills.length} de {skills.length}</span>
       </div>
 
       <div class="skills-grid" id="skills-grid">
-        {skills.map((skill: any, idx: number) => (
+        {skills.map((skill, idx) => (
           <SkillCard
             id={skill.id}
             name={skill.name}
@@ -118,6 +134,40 @@ const totalSize = skills.reduce((acc: number, s: any) => acc + s.rawSize, 0);
         <p>No se encontraron skills con ese filtro. Prueba con otro término.</p>
       </div>
     </section>
+
+    <!-- ─── Resources Footer ─── -->
+    <footer class="resources-footer fade-in-up" style="animation-delay: 400ms">
+      <div class="resources-header">
+        <h2 class="resources-title">Encuentra más skills</h2>
+        <p class="resources-subtitle">Catálogos y repositorios externos de la comunidad</p>
+      </div>
+      <div class="resources-grid">
+        <a href="https://www.aitmpl.com/" target="_blank" rel="noopener noreferrer" class="resource-card glass">
+          <div class="resource-card-content">
+            <span class="resource-card-name">aitmpl.com</span>
+            <span class="resource-card-desc">Plantillas y prompts para agentes de IA listos para usar</span>
+          </div>
+          <svg class="resource-card-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </a>
+        <a href="https://awesomeclaude.ai/" target="_blank" rel="noopener noreferrer" class="resource-card glass">
+          <div class="resource-card-content">
+            <span class="resource-card-name">awesomeclaude.ai</span>
+            <span class="resource-card-desc">Lista curada de recursos, herramientas y skills para Claude</span>
+          </div>
+          <svg class="resource-card-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </a>
+        <a href="https://skills.sh/" target="_blank" rel="noopener noreferrer" class="resource-card glass">
+          <div class="resource-card-content">
+            <span class="resource-card-name">skills.sh</span>
+            <span class="resource-card-desc">Directorio de skills para agentes con Claude Code</span>
+          </div>
+          <svg class="resource-card-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </a>
+      </div>
+      <div class="footer-copy">
+        <span>© 2025 DevSkills Hub</span>
+      </div>
+    </footer>
   </main>
 </Layout>
 
@@ -465,6 +515,96 @@ const totalSize = skills.reduce((acc: number, s: any) => acc + s.rawSize, 0);
 
     .filter-btn {
       flex-shrink: 0;
+    }
+  }
+
+  /* ─── Resources Footer ─── */
+  .resources-footer {
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .resources-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .resources-title {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+  }
+
+  .resources-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .resource-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: border-color var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+  }
+
+  .resource-card:hover {
+    border-color: var(--accent);
+    background: var(--card-bg-hover);
+    transform: translateY(-2px);
+  }
+
+  .resource-card:hover .resource-card-arrow {
+    transform: translate(2px, -2px);
+    color: var(--accent-bright);
+  }
+
+  .resource-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .resource-card-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent-bright);
+  }
+
+  .resource-card-desc {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .resource-card-arrow {
+    flex-shrink: 0;
+    color: var(--text-tertiary);
+    transition: transform var(--transition-fast), color var(--transition-fast);
+  }
+
+  .footer-copy {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    padding-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .resources-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
