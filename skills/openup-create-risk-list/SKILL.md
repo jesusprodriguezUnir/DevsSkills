@@ -1,101 +1,101 @@
 ---
 name: openup-create-risk-list
-description: Create or update risk assessment document from template
+description: Crea o actualiza el documento de evaluación de riesgos a partir de la plantilla
 arguments:
   - name: risks
-    description: JSON array of risks to add (optional)
+    description: Array JSON de riesgos a añadir (opcional)
     required: false
 ---
 
-# Create Risk List
+# Crear Lista de Riesgos
 
-This skill creates or updates a risk list document from the OpenUP template.
+Esta skill crea o actualiza un documento de lista de riesgos a partir de la plantilla OpenUP.
 
-## When to Use
+## Cuándo Usar
 
-Use this skill when:
-- Starting a new project and need to identify risks
-- In Inception phase documenting major risks
-- New risks emerge during project
-- Need to update risk probability or impact
-- Planning risk mitigation strategies
+Usa esta skill cuando:
+- Comiences un nuevo proyecto y necesites identificar riesgos
+- Estés en la fase de Inicio documentando riesgos principales
+- Surjan nuevos riesgos durante el proyecto
+- Necesites actualizar la probabilidad o impacto de un riesgo
+- Planifiques estrategias de mitigación de riesgos
 
-## When NOT to Use
+## Cuándo NO Usar
 
-Do NOT use this skill when:
-- Risk list exists and only minor updates needed (edit directly)
-- Looking for issue tracking (use issue tracker)
-- Risks have been realized and are now issues (manage as issues)
-- Need detailed risk analysis (use risk management process)
+NO uses esta skill cuando:
+- La lista de riesgos existe y solo necesita cambios menores (edítala directamente)
+- Busques seguimiento de incidencias (usa el gestor de incidencias)
+- Los riesgos se hayan materializado y sean ahora incidencias (gestiónalos como incidencias)
+- Necesites un análisis de riesgos detallado (usa el proceso de gestión de riesgos)
 
-## Success Criteria
+## Criterios de Éxito
 
-After using this skill, verify:
-- [ ] Risk list exists at `docs/risk-list.md`
-- [ ] Risks are documented with descriptions
-- [ ] Probability and impact are assessed
-- [ ] Mitigation strategies are defined
-- [ ] Risk owners are assigned
+Tras usar esta skill, verifica:
+- [ ] La lista de riesgos existe en `docs/risk-list.md`
+- [ ] Los riesgos están documentados con descripciones
+- [ ] La probabilidad e impacto están evaluados
+- [ ] Las estrategias de mitigación están definidas
+- [ ] Los responsables de cada riesgo están asignados
 
-## Process
+## Proceso
 
-### 1. Check for Existing Risk List
+### 1. Comprobar Lista de Riesgos Existente
 
-Check if `docs/risk-list.md` exists:
-- If yes, update it
-- If no, create from template
+Comprobar si `docs/risk-list.md` existe:
+- Si existe, actualizarla
+- Si no existe, crear desde la plantilla
 
-### 2. Copy Template (if new)
+### 2. Copiar Plantilla (si es nueva)
 
-If creating new, copy `docs-eng-process/templates/risk-list.md` to `docs/risk-list.md`
+Si se crea nueva, copiar `docs-eng-process/templates/risk-list.md` a `docs/risk-list.md`
 
-### 3. Read Project Context
+### 3. Leer Contexto del Proyecto
 
-Read `docs/project-status.md`, `docs/vision.md` to identify potential risks.
+Leer `docs/project-status.md` y `docs/vision.md` para identificar riesgos potenciales.
 
-### 4. Fill in Risk List
+### 4. Completar la Lista de Riesgos
 
-Update with:
-- **Project name** and context
-- **Risks**: From `$ARGUMENTS[risks]` or identify from project context
-  For each risk, document:
-  - Risk description
-  - Probability (high/medium/low)
-  - Impact (high/medium/low)
-  - Mitigation strategy
-  - Owner/responsible party
+Actualizar con:
+- **Nombre del proyecto** y contexto
+- **Riesgos**: De `$ARGUMENTS[risks]` o identificados del contexto del proyecto
+  Para cada riesgo, documentar:
+  - Descripción del riesgo
+  - Probabilidad (alta/media/baja)
+  - Impacto (alto/medio/bajo)
+  - Estrategia de mitigación
+  - Responsable
 
-### 5. Validate Completeness
+### 5. Validar Completitud
 
-Ensure the risk list includes:
-- Clear risk descriptions
-- Probability and impact assessments
-- Mitigation strategies
-- Risk owners
+Asegurar que la lista de riesgos incluya:
+- Descripciones claras de riesgos
+- Evaluaciones de probabilidad e impacto
+- Estrategias de mitigación
+- Responsables de cada riesgo
 
-## Output
+## Salida
 
-Returns:
-- Path to risk list
-- Number of risks documented
-- High-priority risks summary
+Devuelve:
+- Ruta a la lista de riesgos
+- Número de riesgos documentados
+- Resumen de riesgos de alta prioridad
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| Template not found | Template path incorrect | Verify `docs-eng-process/templates/risk-list.md` exists |
-| No risks identified | Project context insufficient | Review vision and requirements for potential risks |
-| Missing mitigation | Risks documented without mitigation | Add mitigation strategy for each risk |
+| Plantilla no encontrada | Ruta de plantilla incorrecta | Verificar que `docs-eng-process/templates/risk-list.md` existe |
+| Sin riesgos identificados | Contexto del proyecto insuficiente | Revisar la visión y los requisitos en busca de riesgos potenciales |
+| Mitigación ausente | Riesgos documentados sin mitigación | Añadir estrategia de mitigación para cada riesgo |
 
-## References
+## Referencias
 
-- Risk List Template: `docs-eng-process/templates/risk-list.md`
-- Risk Management: `docs-eng-process/openup-knowledge-base/practice-management/risk_val_lifecycle/`
-- Project Manager Role: `docs-eng-process/openup-knowledge-base/core/role/roles/project-manager-4.md`
+- Plantilla de Lista de Riesgos: `docs-eng-process/templates/risk-list.md`
+- Gestión de Riesgos: `docs-eng-process/openup-knowledge-base/practice-management/risk_val_lifecycle/`
+- Rol de Jefe de Proyecto: `docs-eng-process/openup-knowledge-base/core/role/roles/project-manager-4.md`
 
-## See Also
+## Ver También
 
-- [openup-inception](../../openup-phases/inception/SKILL.md) - Inception phase risk identification
-- [openup-create-vision](../create-vision/SKILL.md) - Vision reveals potential risks
-- [openup-create-architecture-notebook](../create-architecture-notebook/SKILL.md) - Technical risk assessment
+- [openup-inception](../../openup-phases/inception/SKILL.md) - Identificación de riesgos en la fase de Inicio
+- [openup-create-vision](../create-vision/SKILL.md) - La visión revela riesgos potenciales
+- [openup-create-architecture-notebook](../create-architecture-notebook/SKILL.md) - Evaluación de riesgos técnicos

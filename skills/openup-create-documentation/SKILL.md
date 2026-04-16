@@ -1,81 +1,81 @@
 ---
 name: openup-create-documentation
-description: Generate human-readable documentation from code and artifacts
+description: Genera documentación legible para humanos a partir de código y artefactos
 arguments:
   - name: doc_type
-    description: Type of documentation (user-guide, api-reference, troubleshooting, tutorial)
+    description: Tipo de documentación (guia-usuario, referencia-api, solucion-problemas, tutorial)
     required: true
   - name: feature
-    description: Feature or component to document
+    description: Funcionalidad o componente a documentar
     required: true
   - name: output_path
-    description: Output path for documentation (optional, defaults to docs/user-guides/)
+    description: Ruta de salida para la documentación (opcional, por defecto docs/user-guides/)
     required: false
 ---
 
-# Create Documentation
+# Crear Documentación
 
-Generate human-readable documentation from use cases, code, and artifacts.
+Genera documentación legible para humanos a partir de casos de uso, código y artefactos.
 
-## Process
+## Proceso
 
-### 1. Determine Documentation Type
+### 1. Determinar Tipo de Documentación
 
-Based on `$ARGUMENTS[doc_type]`:
+Según `$ARGUMENTS[doc_type]`:
 
-| doc_type | Template | Purpose |
-|----------|----------|---------|
-| user-guide | user-guide-template.md | End-user documentation |
-| api-reference | api-reference-template.md | API documentation |
-| troubleshooting | (generated) | Common issues and solutions |
-| tutorial | (generated) | Step-by-step learning |
+| doc_type | Plantilla | Propósito |
+|----------|-----------|-----------|
+| guia-usuario | user-guide-template.md | Documentación para el usuario final |
+| referencia-api | api-reference-template.md | Documentación de la API |
+| solucion-problemas | (generada) | Problemas comunes y soluciones |
+| tutorial | (generada) | Aprendizaje paso a paso |
 
-### 2. Gather Source Material
+### 2. Recopilar Material Fuente
 
-Read relevant sources for the feature: use cases (`docs/use-cases/`), test cases (`docs/test-cases/`), design docs (`docs/design/`), and source code (`src/`). Adapt sources based on doc_type.
+Leer las fuentes relevantes para la funcionalidad: casos de uso (`docs/use-cases/`), casos de prueba (`docs/test-cases/`), documentos de diseño (`docs/design/`) y código fuente (`src/`). Adaptar las fuentes según el tipo de documentación.
 
-### 3. Generate Documentation
+### 3. Generar Documentación
 
-See type-specific files for detailed generation process:
+Consultar los archivos específicos por tipo para el proceso detallado de generación:
 - [user-guide.md](./user-guide.md)
 - [api-reference.md](./api-reference.md)
 - [troubleshooting.md](./troubleshooting.md)
 - [tutorial.md](./tutorial.md)
 
-### 4. Validate and Review
+### 4. Validar y Revisar
 
-- Verify all examples are accurate
-- Test code examples if applicable
-- Check cross-references
-- Ensure clarity for target audience
+- Verificar que todos los ejemplos son correctos
+- Probar los ejemplos de código si aplica
+- Comprobar las referencias cruzadas
+- Asegurar la claridad para el público objetivo
 
-### 5. Create Documentation File
+### 5. Crear Archivo de Documentación
 
-- Default path: `docs/user-guides/<feature>-<doc_type>.md`
-- Custom path: Use `$ARGUMENTS[output_path]` if provided
-- Link related documentation
+- Ruta por defecto: `docs/user-guides/<funcionalidad>-<tipo_doc>.md`
+- Ruta personalizada: Usar `$ARGUMENTS[output_path]` si se proporciona
+- Enlazar documentación relacionada
 
-## Example Usage
+## Ejemplo de Uso
 
 ```
-/openup-create-documentation doc_type: user-guide feature: user-authentication
-/openup-create-documentation doc_type: api-reference feature: payment-api output_path: docs/api/
+/openup-create-documentation doc_type: guia-usuario feature: autenticacion-usuarios
+/openup-create-documentation doc_type: referencia-api feature: api-pagos output_path: docs/api/
 ```
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| No use case found | Feature lacks use cases | Create use cases first |
-| Code not found | Feature not implemented | Verify feature name and status |
-| Template missing | Template not available | Use generic structure |
+| Caso de uso no encontrado | La funcionalidad carece de casos de uso | Crear primero los casos de uso |
+| Código no encontrado | La funcionalidad no está implementada | Verificar el nombre y estado de la funcionalidad |
+| Plantilla no disponible | La plantilla no está disponible | Usar estructura genérica |
 
-## References
+## Referencias
 
-- User Guide Template: `docs-eng-process/templates/user-guide-template.md`
-- API Reference Template: `docs-eng-process/templates/api-reference-template.md`
+- Plantilla de Guía de Usuario: `docs-eng-process/templates/user-guide-template.md`
+- Plantilla de Referencia de API: `docs-eng-process/templates/api-reference-template.md`
 
-## See Also
+## Ver También
 
-- [openup-create-use-case](../create-use-case/SKILL.md) - Create use cases first
-- [openup-detail-use-case](../detail-use-case/SKILL.md) - Detail use cases for better documentation
+- [openup-create-use-case](../create-use-case/SKILL.md) - Crear primero los casos de uso
+- [openup-detail-use-case](../detail-use-case/SKILL.md) - Detallar casos de uso para mejor documentación

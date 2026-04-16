@@ -1,106 +1,106 @@
 ---
 name: openup-create-iteration-plan
-description: Plan iteration based on current state and roadmap
+description: Planifica la iteración basándose en el estado actual y la hoja de ruta
 arguments:
   - name: iteration_number
-    description: Iteration number to plan
+    description: Número de iteración a planificar
     required: false
 ---
 
-# Create Iteration Plan
+# Crear Plan de Iteración
 
-This skill generates an iteration plan from the OpenUP template.
+Esta skill genera un plan de iteración a partir de la plantilla OpenUP.
 
-## When to Use
+## Cuándo Usar
 
-Use this skill when:
-- Starting a new iteration and need to plan work
-- In Construction phase planning iterations
-- Need to select tasks from roadmap for iteration
-- Assigning tasks to team members
-- Defining iteration success criteria
+Usa esta skill cuando:
+- Comiences una nueva iteración y necesites planificar el trabajo
+- Estés en la fase de Construcción planificando iteraciones
+- Necesites seleccionar tareas de la hoja de ruta para la iteración
+- Asignes tareas a miembros del equipo
+- Definas criterios de éxito de la iteración
 
-## When NOT to Use
+## Cuándo NO Usar
 
-Do NOT use this skill when:
-- Looking to start iteration (use `/openup-start-iteration`)
-- Need to create roadmap (use project management)
-- Iteration plan exists and only minor updates needed (edit directly)
-- In Inception phase (use phase activities instead)
+NO uses esta skill cuando:
+- Quieras iniciar la iteración (usa `/openup-start-iteration`)
+- Necesites crear la hoja de ruta (usa la gestión de proyecto)
+- El plan de iteración existe y solo necesita cambios menores (edítalo directamente)
+- Estés en la fase de Inicio (usa las actividades de fase en su lugar)
 
-## Success Criteria
+## Criterios de Éxito
 
-After using this skill, verify:
-- [ ] Iteration plan file exists
-- [ ] Iteration goal is clearly defined
-- [ ] Tasks are selected from roadmap
-- [ ] Task assignments are made
-- [ ] Success criteria are specified
+Tras usar esta skill, verifica:
+- [ ] El archivo del plan de iteración existe
+- [ ] El objetivo de la iteración está claramente definido
+- [ ] Las tareas están seleccionadas de la hoja de ruta
+- [ ] Las asignaciones de tareas están hechas
+- [ ] Los criterios de éxito están especificados
 
-## Process
+## Proceso
 
-### 1. Read Project Status
+### 1. Leer Estado del Proyecto
 
-Read `docs/project-status.md` to get:
-- Current phase
-- Current iteration
-- Iteration goals
+Leer `docs/project-status.md` para obtener:
+- Fase actual
+- Iteración actual
+- Objetivos de la iteración
 
-### 2. Read Roadmap
+### 2. Leer Hoja de Ruta
 
-Read `docs/roadmap.md` to identify:
-- Pending tasks appropriate for this iteration
-- Task priorities and dependencies
+Leer `docs/roadmap.md` para identificar:
+- Tareas pendientes apropiadas para esta iteración
+- Prioridades y dependencias de las tareas
 
-### 3. Determine Iteration Number
+### 3. Determinar Número de Iteración
 
-Use `$ARGUMENTS[iteration_number]` or auto-increment from current iteration.
+Usar `$ARGUMENTS[iteration_number]` o auto-incrementar desde la iteración actual.
 
-### 4. Copy Template
+### 4. Copiar Plantilla
 
-Copy `docs-eng-process/templates/iteration-plan.md` to `docs/phases/<phase>/iteration-<n>-plan.md`
+Copiar `docs-eng-process/templates/iteration-plan.md` a `docs/phases/<fase>/iteration-<n>-plan.md`
 
-### 5. Fill in Iteration Plan
+### 5. Completar el Plan de Iteración
 
-Update with:
-- **Iteration number** and dates
-- **Iteration goal**: Derived from roadmap and phase objectives
-- **Selected tasks**: From roadmap, prioritized for this iteration
-- **Task assignments**: Which roles will handle each task
-- **Success criteria**: How to know the iteration succeeded
-- **Risk assessment**: Any iteration-specific risks
+Actualizar con:
+- **Número de iteración** y fechas
+- **Objetivo de la iteración**: Derivado de la hoja de ruta y los objetivos de fase
+- **Tareas seleccionadas**: De la hoja de ruta, priorizadas para esta iteración
+- **Asignaciones de tareas**: Qué roles se encargarán de cada tarea
+- **Criterios de éxito**: Cómo saber si la iteración tuvo éxito
+- **Evaluación de riesgos**: Riesgos específicos de la iteración
 
-### 6. Validate Completeness
+### 6. Validar Completitud
 
-Ensure the iteration plan includes:
-- Clear iteration goal
-- List of tasks to complete
-- Task assignments
-- Success criteria
-- Iteration timeline
+Asegurar que el plan de iteración incluya:
+- Objetivo de iteración claro
+- Lista de tareas a completar
+- Asignaciones de tareas
+- Criterios de éxito
+- Cronograma de la iteración
 
-## Output
+## Salida
 
-Returns:
-- Path to iteration plan
-- List of tasks planned
-- Recommended team composition
+Devuelve:
+- Ruta al plan de iteración
+- Lista de tareas planificadas
+- Composición de equipo recomendada
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| Template not found | Template path incorrect | Verify `docs-eng-process/templates/iteration-plan.md` exists |
-| No tasks available | Roadmap is empty or all tasks complete | Review roadmap and add pending tasks |
-| Invalid iteration number | Iteration number conflicts or gaps | Verify current iteration from project-status |
+| Plantilla no encontrada | Ruta de plantilla incorrecta | Verificar que `docs-eng-process/templates/iteration-plan.md` existe |
+| Sin tareas disponibles | La hoja de ruta está vacía o todas las tareas completadas | Revisar la hoja de ruta y añadir tareas pendientes |
+| Número de iteración inválido | Conflictos o huecos en el número de iteración | Verificar la iteración actual desde el estado del proyecto |
 
-## References
+## Referencias
 
-- Iteration Plan Template: `docs-eng-process/templates/iteration-plan.md`
-- Project Manager Role: `docs-eng-process/openup-knowledge-base/core/role/roles/project-manager-4.md`
+- Plantilla de Plan de Iteración: `docs-eng-process/templates/iteration-plan.md`
+- Rol de Jefe de Proyecto: `docs-eng-process/openup-knowledge-base/core/role/roles/project-manager-4.md`
 
-## See Also
+## Ver También
 
-- [openup-start-iteration](../../openup-workflow/start-iteration/SKILL.md) - Begin new iteration
-- [openup-complete-task](../../openup-workflow/complete-task/SKILL.md) - Mark iteration tasks complete
-- [openup-construction](../../openup-phases/construction/SKILL.md) - Construction iteration planning
+- [openup-start-iteration](../../openup-workflow/start-iteration/SKILL.md) - Iniciar nueva iteración
+- [openup-complete-task](../../openup-workflow/complete-task/SKILL.md) - Marcar tareas de iteración como completadas
+- [openup-construction](../../openup-phases/construction/SKILL.md) - Planificación de iteraciones de Construcción

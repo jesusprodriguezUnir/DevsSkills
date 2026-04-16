@@ -1,192 +1,192 @@
 ---
 name: openup-shared-vision
-description: Create shared technical vision for team alignment
+description: Crea una visión técnica compartida para la alineación del equipo
 arguments:
   - name: technical_objectives
-    description: Key technical objectives to address (comma-separated)
+    description: Objetivos técnicos clave a abordar (separados por comas)
     required: false
   - name: scope_focus
-    description: Focus area for IN/OUT scope definition
+    description: Área de enfoque para la definición de alcance DENTRO/FUERA
     required: false
 ---
 
-# Shared Vision
+# Visión Compartida
 
-This skill creates a shared technical vision document that ensures alignment between stakeholders and the development team on technical objectives, scope, and key decisions.
+Esta skill crea un documento de visión técnica compartida que asegura la alineación entre los interesados y el equipo de desarrollo sobre objetivos técnicos, alcance y decisiones clave.
 
-## When to Use
+## Cuándo Usar
 
-Use this skill when:
-- Vision document exists but needs technical elaboration
-- Need to define IN/OUT scope clearly
-- Starting Elaboration phase and need technical alignment
-- Team members have different understanding of technical direction
-- Need to document key technical decisions and constraints
+Usa esta skill cuando:
+- El documento de visión existe pero necesita elaboración técnica
+- Necesites definir el alcance DENTRO/FUERA claramente
+- Comiences la fase de Elaboración y necesites alineación técnica
+- Los miembros del equipo tengan diferente comprensión de la dirección técnica
+- Necesites documentar decisiones técnicas clave y restricciones
 
-## When NOT to Use
+## Cuándo NO Usar
 
-Do NOT use this skill when:
-- No vision document exists (use `/openup-create-vision` first)
-- In late Construction or Transition phases (should already exist)
-- Only need architecture details (use `/openup-create-architecture-notebook`)
-- Vision is already well-defined and understood
+NO uses esta skill cuando:
+- No existe documento de visión (usa `/openup-create-vision` primero)
+- Estés en las fases de Construcción tardía o Transición (ya debería existir)
+- Solo necesites detalles de arquitectura (usa `/openup-create-architecture-notebook`)
+- La visión ya está bien definida y comprendida
 
-## Success Criteria
+## Criterios de Éxito
 
-After using this skill, verify:
-- [ ] Technical objectives are clearly documented
-- [ ] IN/OUT scope is well-defined
-- [ ] Technical assumptions and constraints are listed
-- [ ] Key technical decisions have rationale
-- [ ] Open questions are tracked for elaboration
-- [ ] Document is linked from main vision
+Tras usar esta skill, verifica:
+- [ ] Los objetivos técnicos están claramente documentados
+- [ ] El alcance DENTRO/FUERA está bien definido
+- [ ] Las suposiciones y restricciones técnicas están listadas
+- [ ] Las decisiones técnicas clave tienen justificación
+- [ ] Las preguntas abiertas están registradas para elaboración
+- [ ] El documento está enlazado desde la visión principal
 
-## Process Summary
+## Resumen del Proceso
 
-1. Read existing vision document
-2. Extract technical context and objectives
-3. Define IN/OUT scope
-4. Document technical assumptions and constraints
-5. Record key technical decisions
-6. Identify open questions
+1. Leer el documento de visión existente
+2. Extraer el contexto y los objetivos técnicos
+3. Definir el alcance DENTRO/FUERA
+4. Documentar suposiciones y restricciones técnicas
+5. Registrar decisiones técnicas clave
+6. Identificar preguntas abiertas
 
-## Detailed Steps
+## Pasos Detallados
 
-### 1. Read Existing Vision
+### 1. Leer la Visión Existente
 
-Read `docs/vision.md` to understand:
-- Project problem statement
-- Stakeholder needs
-- Business objectives
-- Current project status
+Leer `docs/vision.md` para comprender:
+- Planteamiento del problema del proyecto
+- Necesidades de los interesados
+- Objetivos de negocio
+- Estado actual del proyecto
 
-### 2. Extract Technical Context
+### 2. Extraer Contexto Técnico
 
-From the vision and project status, identify:
+De la visión y el estado del proyecto, identificar:
 
-**Technical Objectives:**
-- What technical problems need to be solved?
-- What are the key quality attributes (performance, security, scalability)?
-- What technical success criteria exist?
+**Objetivos Técnicos:**
+- ¿Qué problemas técnicos necesitan resolverse?
+- ¿Cuáles son los atributos de calidad clave (rendimiento, seguridad, escalabilidad)?
+- ¿Qué criterios de éxito técnicos existen?
 
-**If `$ARGUMENTS[technical_objectives]` is provided:**
-- Focus on those specific objectives
-- Add related technical objectives
+**Si se proporciona `$ARGUMENTS[technical_objectives]`:**
+- Centrarse en esos objetivos específicos
+- Añadir objetivos técnicos relacionados
 
-**Examples:**
-- "Achieve sub-second response times"
-- "Support 10,000 concurrent users"
-- "Ensure data encryption at rest and in transit"
+**Ejemplos:**
+- "Lograr tiempos de respuesta inferiores a un segundo"
+- "Soportar 10.000 usuarios concurrentes"
+- "Garantizar cifrado de datos en reposo y en tránsito"
 
-### 3. Define IN/OUT Scope
+### 3. Definir Alcance DENTRO/FUERA
 
-Create clear boundaries for what is included and excluded:
+Crear límites claros de lo que se incluye y lo que se excluye:
 
-**IN Scope:**
-What features and capabilities are definitely included?
-- Use `$ARGUMENTS[scope_focus]` as a starting point if provided
-- List specific features, capabilities, and technologies
-- Be specific about what "in scope" means
+**DENTRO del Alcance:**
+¿Qué funcionalidades y capacidades están definitivamente incluidas?
+- Usar `$ARGUMENTS[scope_focus]` como punto de partida si se proporciona
+- Listar funcionalidades, capacidades y tecnologías específicas
+- Ser específico sobre lo que significa "dentro del alcance"
 
-**OUT Scope:**
-What is explicitly excluded to manage expectations?
-- Features that are explicitly NOT being built
-- Technologies that won't be used
-- Capabilities that are out of scope for this project
+**FUERA del Alcance:**
+¿Qué se excluye explícitamente para gestionar expectativas?
+- Funcionalidades que explícitamente NO se van a construir
+- Tecnologías que no se utilizarán
+- Capacidades que están fuera del alcance de este proyecto
 
-### 4. Document Technical Assumptions
+### 4. Documentar Suposiciones Técnicas
 
-Record assumptions about the technical environment:
+Registrar suposiciones sobre el entorno técnico:
 
-| Assumption | Impact | Validated By |
-|------------|--------|--------------|
-| Example: PostgreSQL available | Low - affects data layer | DBA |
-| Example: Users on modern browsers | Medium - affects frontend | UX research |
+| Suposición | Impacto | Validado Por |
+|------------|---------|--------------|
+| Ejemplo: PostgreSQL disponible | Bajo - afecta capa de datos | DBA |
+| Ejemplo: Usuarios en navegadores modernos | Medio - afecta frontend | Investigación UX |
 
-### 5. Document Technical Constraints
+### 5. Documentar Restricciones Técnicas
 
-Record known constraints that limit options:
+Registrar restricciones conocidas que limitan las opciones:
 
-| Constraint | Description | Mitigation |
-|------------|-------------|------------|
-| Example: Budget for cloud services | Must use cost-effective solutions | Serverless architecture |
-| Example: Legacy system integration | Must work with existing APIs | Adapter pattern |
+| Restricción | Descripción | Mitigación |
+|-------------|-------------|------------|
+| Ejemplo: Presupuesto para servicios en la nube | Debe usar soluciones rentables | Arquitectura serverless |
+| Ejemplo: Integración con sistema legado | Debe funcionar con APIs existentes | Patrón adaptador |
 
-### 6. Record Key Technical Decisions
+### 6. Registrar Decisiones Técnicas Clave
 
-Document significant technical decisions with rationale:
+Documentar decisiones técnicas significativas con justificación:
 
-**Examples:**
-- Choice of programming language
-- Architectural style (microservices vs monolith)
-- Database selection
-- Deployment approach
+**Ejemplos:**
+- Elección del lenguaje de programación
+- Estilo arquitectónico (microservicios vs monolito)
+- Selección de base de datos
+- Enfoque de despliegue
 
-For each decision:
-- What was decided
-- Why (rationale)
-- Alternatives considered
-- Trade-offs accepted
+Para cada decisión:
+- Qué se decidió
+- Por qué (justificación)
+- Alternativas consideradas
+- Compromisos aceptados
 
-### 7. Identify Open Questions
+### 7. Identificar Preguntas Abiertas
 
-List questions that need answers during elaboration:
+Listar preguntas que necesitan respuesta durante la elaboración:
 
-| Question | Impact | Target Phase |
-|----------|--------|--------------|
-| Example: How to handle offline mode? | High - affects architecture | Elaboration |
-| Example: Third-party API limits? | Medium - affects design | Elaboration |
+| Pregunta | Impacto | Fase Objetivo |
+|----------|---------|---------------|
+| Ejemplo: ¿Cómo gestionar el modo sin conexión? | Alto - afecta la arquitectura | Elaboración |
+| Ejemplo: ¿Límites de la API de terceros? | Medio - afecta el diseño | Elaboración |
 
-### 8. Create Shared Vision Document
+### 8. Crear Documento de Visión Compartida
 
-Create `docs/shared-vision.md` using the shared vision template with:
-- Technical objectives table
-- IN/OUT scope sections
-- Assumptions and constraints tables
-- Key technical decisions
-- Open questions
+Crear `docs/shared-vision.md` usando la plantilla de visión compartida con:
+- Tabla de objetivos técnicos
+- Secciones de alcance DENTRO/FUERA
+- Tablas de suposiciones y restricciones
+- Decisiones técnicas clave
+- Preguntas abiertas
 
-### 9. Link from Main Vision
+### 9. Enlazar desde la Visión Principal
 
-Add a reference in `docs/vision.md`:
+Añadir una referencia en `docs/vision.md`:
 ```markdown
-## Technical Vision
+## Visión Técnica
 
-See [Shared Vision](shared-vision.md) for detailed technical objectives, scope, and decisions.
+Consulta la [Visión Compartida](shared-vision.md) para objetivos técnicos detallados, alcance y decisiones.
 ```
 
-## Output
+## Salida
 
-Returns a summary of:
-- Shared vision document created at `docs/shared-vision.md`
-- Technical objectives documented
-- IN/OUT scope defined
-- Key decisions recorded
-- Open questions identified
+Devuelve un resumen de:
+- Documento de visión compartida creado en `docs/shared-vision.md`
+- Objetivos técnicos documentados
+- Alcance DENTRO/FUERA definido
+- Decisiones clave registradas
+- Preguntas abiertas identificadas
 
-## Example Usage
+## Ejemplo de Uso
 
 ```
-/openup-shared-vision technical_objectives: "scalability, security" scope_focus: "user authentication"
+/openup-shared-vision technical_objectives: "escalabilidad, seguridad" scope_focus: "autenticación de usuarios"
 ```
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| Vision not found | docs/vision.md doesn't exist | Create vision first with /openup-create-vision |
-| Too vague | Objectives not specific enough | Add measurable criteria |
-| Missing OUT scope | Only IN scope defined | Always define both IN and OUT |
-| No rationale | Decisions without justification | Add why and alternatives considered |
+| Visión no encontrada | docs/vision.md no existe | Crear primero la visión con /openup-create-vision |
+| Demasiado vago | Objetivos no suficientemente específicos | Añadir criterios medibles |
+| Falta alcance FUERA | Solo se definió el alcance DENTRO | Definir siempre ambos DENTRO y FUERA |
+| Sin justificación | Decisiones sin fundamentación | Añadir el porqué y las alternativas consideradas |
 
-## References
+## Referencias
 
-- Shared Vision Template: `docs-eng-process/templates/shared-vision.md`
-- Vision Template: `docs-eng-process/templates/vision.md`
-- Architecture Notebook Template: `docs-eng-process/templates/architecture-notebook.md`
+- Plantilla de Visión Compartida: `docs-eng-process/templates/shared-vision.md`
+- Plantilla de Visión: `docs-eng-process/templates/vision.md`
+- Plantilla de Cuaderno de Arquitectura: `docs-eng-process/templates/architecture-notebook.md`
 
-## See Also
+## Ver También
 
-- [openup-create-vision](../create-vision/SKILL.md) - Create project vision first
-- [openup-create-architecture-notebook](../create-architecture-notebook/SKILL.md) - Create detailed architecture documentation
-- [openup-elaboration](../../openup-phases/elaboration/SKILL.md) - Elaboration phase activities
+- [openup-create-vision](../create-vision/SKILL.md) - Crear primero la visión del proyecto
+- [openup-create-architecture-notebook](../create-architecture-notebook/SKILL.md) - Crear documentación de arquitectura detallada
+- [openup-elaboration](../../openup-phases/elaboration/SKILL.md) - Actividades de la fase de Elaboración

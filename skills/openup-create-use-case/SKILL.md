@@ -1,105 +1,105 @@
 ---
 name: openup-create-use-case
-description: Create a use case specification from template
+description: Crea una especificación de caso de uso a partir de la plantilla
 arguments:
   - name: use_case_name
-    description: Name of the use case
+    description: Nombre del caso de uso
     required: true
   - name: primary_actor
-    description: The primary actor for this use case
+    description: El actor principal de este caso de uso
     required: true
   - name: description
-    description: Brief description of what the use case accomplishes
+    description: Descripción breve de lo que logra el caso de uso
     required: true
 ---
 
-# Create Use Case
+# Crear Caso de Uso
 
-This skill creates a use case specification from the OpenUP template.
+Esta skill crea una especificación de caso de uso a partir de la plantilla OpenUP.
 
-## When to Use
+## Cuándo Usar
 
-Use this skill when:
-- Need to document user interactions with the system
-- In Inception or Elaboration phase defining requirements
-- Capturing functional requirements from user perspective
-- Need to specify preconditions, flows, and postconditions
-- Creating test scenarios from requirements
+Usa esta skill cuando:
+- Necesites documentar interacciones del usuario con el sistema
+- Estés en la fase de Inicio o Elaboración definiendo requisitos
+- Captures requisitos funcionales desde la perspectiva del usuario
+- Necesites especificar precondiciones, flujos y postcondiciones
+- Crees escenarios de prueba a partir de requisitos
 
-## When NOT to Use
+## Cuándo NO Usar
 
-Do NOT use this skill when:
-- Need non-functional requirements (use architecture notebook)
-- Looking for technical specifications (use design documents)
-- Documenting internal system behavior (use technical design)
-- Use case already exists (update existing file)
+NO uses esta skill cuando:
+- Necesites requisitos no funcionales (usa el cuaderno de arquitectura)
+- Busques especificaciones técnicas (usa documentos de diseño)
+- Documentes comportamiento interno del sistema (usa diseño técnico)
+- El caso de uso ya existe (actualiza el archivo existente)
 
-## Success Criteria
+## Criterios de Éxito
 
-After using this skill, verify:
-- [ ] Use case file exists in `docs/use-cases/`
-- [ ] Use case name and primary actor are defined
-- [ ] Basic flow is documented
-- [ ] Alternative flows are identified
-- [ ] Pre/postconditions are specified
+Tras usar esta skill, verifica:
+- [ ] El archivo de caso de uso existe en `docs/use-cases/`
+- [ ] El nombre del caso de uso y el actor principal están definidos
+- [ ] El flujo básico está documentado
+- [ ] Los flujos alternativos están identificados
+- [ ] Las pre/postcondiciones están especificadas
 
-## Process
+## Proceso
 
-### 1. Create Use Cases Directory
+### 1. Crear Directorio de Casos de Uso
 
-Ensure `docs/use-cases/` directory exists.
+Asegurar que el directorio `docs/use-cases/` existe.
 
-### 2. Generate Filename
+### 2. Generar Nombre de Archivo
 
-Create filename from use case name: `docs/use-cases/<use-case-name>.md`
+Crear el nombre de archivo a partir del nombre del caso de uso: `docs/use-cases/<nombre-caso-uso>.md`
 
-### 3. Copy Template
+### 3. Copiar Plantilla
 
-Copy `docs-eng-process/templates/use-case-specification.md` to the new file.
+Copiar `docs-eng-process/templates/use-case-specification.md` al nuevo archivo.
 
-### 4. Fill in Use Case
+### 4. Completar el Caso de Uso
 
-Update the use case specification with:
-- **Use case name**: `$ARGUMENTS[use_case_name]`
-- **Primary actor**: `$ARGUMENTS[primary_actor]`
-- **Description**: `$ARGUMENTS[description]`
-- **Preconditions**: What must be true before starting
-- **Basic flow**: Step-by-step main interaction
-- **Alternative flows**: Alternative paths and edge cases
-- **Postconditions**: What is true after completion
+Actualizar la especificación del caso de uso con:
+- **Nombre del caso de uso**: `$ARGUMENTS[use_case_name]`
+- **Actor principal**: `$ARGUMENTS[primary_actor]`
+- **Descripción**: `$ARGUMENTS[description]`
+- **Precondiciones**: Qué debe ser cierto antes de comenzar
+- **Flujo básico**: Interacción principal paso a paso
+- **Flujos alternativos**: Caminos alternativos y casos límite
+- **Postcondiciones**: Qué es cierto tras la finalización
 
-### 5. Validate Completeness
+### 5. Validar Completitud
 
-Ensure the use case includes:
-- Clear name and description
-- Identified actors
-- Basic flow of events
-- Key alternative flows
-- Pre/postconditions
+Asegurar que el caso de uso incluya:
+- Nombre y descripción claros
+- Actores identificados
+- Flujo básico de eventos
+- Flujos alternativos clave
+- Pre/postcondiciones
 
-## Output
+## Salida
 
-Returns:
-- Path to created use case file
-- Use case ID (for tracking)
-- Sections filled in
+Devuelve:
+- Ruta al archivo de caso de uso creado
+- ID del caso de uso (para seguimiento)
+- Secciones completadas
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| Template not found | Template path incorrect | Verify `docs-eng-process/templates/use-case-specification.md` exists |
-| Invalid filename | Use case name has invalid characters | Sanitize filename, replace spaces with dashes |
-| Missing actors | Actors not identified | Identify primary and secondary actors from vision/requirements |
+| Plantilla no encontrada | Ruta de plantilla incorrecta | Verificar que `docs-eng-process/templates/use-case-specification.md` existe |
+| Nombre de archivo inválido | El nombre del caso de uso tiene caracteres no válidos | Sanear el nombre de archivo, reemplazar espacios con guiones |
+| Actores ausentes | Actores no identificados | Identificar actores primarios y secundarios desde la visión/requisitos |
 
-## References
+## Referencias
 
-- Use Case Template: `docs-eng-process/templates/use-case-specification.md`
-- Use Case Work Product: `docs-eng-process/openup-knowledge-base/core/common/workproducts/use_case.md`
+- Plantilla de Caso de Uso: `docs-eng-process/templates/use-case-specification.md`
+- Producto de Trabajo de Caso de Uso: `docs-eng-process/openup-knowledge-base/core/common/workproducts/use_case.md`
 
-## See Also
+## Ver También
 
-- [openup-create-vision](../create-vision/SKILL.md) - Define project vision first
-- [openup-detail-use-case](../detail-use-case/SKILL.md) - Transform high-level use case into detailed scenarios
-- [openup-create-test-plan](../create-test-plan/SKILL.md) - Generate tests from use cases
-- [openup-elaboration](../../openup-phases/elaboration/SKILL.md) - Elaboration phase use case detail
+- [openup-create-vision](../create-vision/SKILL.md) - Definir primero la visión del proyecto
+- [openup-detail-use-case](../detail-use-case/SKILL.md) - Transformar caso de uso de alto nivel en escenarios detallados
+- [openup-create-test-plan](../create-test-plan/SKILL.md) - Generar pruebas desde los casos de uso
+- [openup-elaboration](../../openup-phases/elaboration/SKILL.md) - Detalle de casos de uso en la fase de Elaboración

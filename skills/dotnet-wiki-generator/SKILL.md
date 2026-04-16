@@ -11,11 +11,11 @@ Skill para generar documentación wiki profesional y estructurada a partir de pr
 
 ## Capacidades
 
-1. **Extracción automática** de XML documentation comments
+1. **Extracción automática** de comentarios de documentación XML
 2. **Análisis de arquitectura** — capas, dependencias, patrones usados
 3. **Generación de diagramas** — dependencias entre proyectos, flujos de datos
 4. **Índice navegable** — tabla de contenidos jerárquica
-5. **API Reference** — documentación de endpoints, DTOs y contratos
+5. **Referencia de API** — documentación de endpoints, DTOs y contratos
 
 ## Estructura de Wiki Generada
 
@@ -25,11 +25,11 @@ wiki/
 ├── getting-started.md           # Guía de inicio rápido
 ├── architecture/
 │   ├── overview.md              # Diagrama y descripción de capas
-│   ├── decisions.md             # ADRs (Architecture Decision Records)
+│   ├── decisions.md             # Registros de Decisiones de Arquitectura (ADRs)
 │   └── dependencies.md          # Mapa de dependencias entre proyectos
 ├── domain/
 │   ├── entities.md              # Entidades del dominio
-│   ├── value-objects.md         # Value Objects
+│   ├── value-objects.md         # Objetos de Valor
 │   └── events.md                # Eventos de dominio
 ├── api/
 │   ├── endpoints.md             # Lista de endpoints REST
@@ -55,7 +55,7 @@ dotnet sln list
 
 Analizar:
 - Proyectos en la solución y sus relaciones
-- NuGet packages usados (para inferir stack)
+- Paquetes NuGet usados (para inferir tecnologías)
 - Archivos de configuración (`appsettings.json`, `Program.cs`)
 - Migraciones de Entity Framework
 
@@ -81,7 +81,7 @@ public class UserService : IUserService
 
 > {Descripción extraída del .csproj o README}
 
-## Stack Tecnológico
+## Tecnologías Utilizadas
 
 | Categoría | Tecnología |
 |-----------|-----------|
@@ -99,16 +99,16 @@ public class UserService : IUserService
 
 | Proyecto | Tipo | Descripción |
 |----------|------|-------------|
-| src/Domain | Class Library | Entidades, interfaces, eventos |
-| src/Application | Class Library | Casos de uso, DTOs, validaciones |
-| src/Infrastructure | Class Library | EF Core, servicios externos |
+| src/Domain | Biblioteca de Clases | Entidades, interfaces, eventos |
+| src/Application | Biblioteca de Clases | Casos de uso, DTOs, validaciones |
+| src/Infrastructure | Biblioteca de Clases | EF Core, servicios externos |
 | src/API | Web API | Controllers, middleware, config |
 
 ## Enlaces Rápidos
 
 - [Guía de Inicio](getting-started.md)
 - [Arquitectura](architecture/overview.md)
-- [API Reference](api/endpoints.md)
+- [Referencia de API](api/endpoints.md)
 - [Base de Datos](database/schema.md)
 ```
 
@@ -125,13 +125,13 @@ Crea un nuevo usuario en el sistema.
 
 ```json
 {
-  "name": "string (requerido, 2-100 chars)",
+  "name": "string (requerido, 2-100 caracteres)",
   "email": "string (requerido, formato email)",
   "role": "string (admin | user | viewer)"
 }
 ``` 
 
-### Responses
+### Respuestas
 
 | Código | Descripción | Body |
 |--------|-------------|------|
@@ -149,7 +149,7 @@ curl -X POST https://api.example.com/api/users \
 ```
 ```
 
-### Paso 5: Generar Architecture Decision Records (ADRs)
+### Paso 5: Generar Registros de Decisiones de Arquitectura (ADRs)
 
 ```markdown
 ## ADR-001: Usar MediatR para CQRS
@@ -165,8 +165,8 @@ Usar MediatR como mediador para implementar CQRS ligero sin event sourcing.
 
 ### Consecuencias
 - ✅ Handlers desacoplados y testables
-- ✅ Pipeline behaviors para cross-cutting concerns
-- ⚠️ Indirección adicional puede dificultar debugging
+- ✅ Comportamientos de pipeline para preocupaciones transversales
+- ⚠️ Indirección adicional puede dificultar la depuración
 ```
 
 ## Formato de Salida
@@ -181,13 +181,13 @@ Usar MediatR como mediador para implementar CQRS ligero sin event sourcing.
 - Macros de código y tablas nativas
 - Jerarquía de páginas padre-hijo
 
-## Checklist de Documentación Completa
+## Lista de Verificación de Documentación Completa
 
 - [ ] Home con visión general del proyecto
 - [ ] Diagrama de arquitectura actualizado
 - [ ] Cada endpoint documentado con request/response
 - [ ] Entidades del dominio con relaciones
-- [ ] Guía de setup para nuevos desarrolladores
+- [ ] Guía de configuración para nuevos desarrolladores
 - [ ] ADRs para decisiones técnicas importantes
 - [ ] Convenciones de código documentadas
 - [ ] Esquema de base de datos actualizado
@@ -197,7 +197,7 @@ Usar MediatR como mediador para implementar CQRS ligero sin event sourcing.
 ### Automatización con CI/CD
 
 ```yaml
-# Regenerar wiki en cada merge a main
+# Regenerar wiki en cada merge a la rama principal
 - name: Generate Wiki
   run: |
     dotnet tool run docfx build docs/docfx.json

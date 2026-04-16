@@ -1,100 +1,100 @@
 ---
 name: openup-create-vision
-description: Generate a vision document from template
+description: Genera un documento de visión a partir de la plantilla
 arguments:
   - name: project_name
-    description: Name of the project
+    description: Nombre del proyecto
     required: true
   - name: problem_statement
-    description: Brief description of the problem to be solved
+    description: Descripción breve del problema a resolver
     required: true
 ---
 
-# Create Vision Document
+# Crear Documento de Visión
 
-This skill generates a vision document from the OpenUP template.
+Esta skill genera un documento de visión a partir de la plantilla OpenUP.
 
-## When to Use
+## Cuándo Usar
 
-Use this skill when:
-- Starting a new project and need to define the vision
-- In Inception phase and need to document project scope
-- Stakeholders need a clear understanding of project goals
-- Need to define problem statement and proposed solution
-- Creating initial project artifacts
+Usa esta skill cuando:
+- Comiences un nuevo proyecto y necesites definir la visión
+- Estés en la fase de Inicio y necesites documentar el alcance del proyecto
+- Los interesados necesiten una comprensión clara de los objetivos del proyecto
+- Necesites definir el planteamiento del problema y la solución propuesta
+- Crees los artefactos iniciales del proyecto
 
-## When NOT to Use
+## Cuándo NO Usar
 
-Do NOT use this skill when:
-- Vision document already exists (update it directly or use revision process)
-- Need detailed requirements (use use case skills instead)
-- Looking for technical architecture (use `/openup-create-architecture-notebook`)
-- In later phases (Elaboration+) when vision should be stable
+NO uses esta skill cuando:
+- El documento de visión ya existe (actualízalo directamente o usa un proceso de revisión)
+- Necesites requisitos detallados (usa las skills de casos de uso en su lugar)
+- Busques arquitectura técnica (usa `/openup-create-architecture-notebook`)
+- Estés en fases posteriores (Elaboración+) cuando la visión debería estar estable
 
-## Success Criteria
+## Criterios de Éxito
 
-After using this skill, verify:
-- [ ] Vision document exists at `docs/vision.md`
-- [ ] Project name and problem statement are filled in
-- [ ] Stakeholders are identified
-- [ ] Key features are listed
-- [ ] Success criteria are defined
+Tras usar esta skill, verifica:
+- [ ] El documento de visión existe en `docs/vision.md`
+- [ ] El nombre del proyecto y el planteamiento del problema están completados
+- [ ] Los interesados están identificados
+- [ ] Las funcionalidades clave están listadas
+- [ ] Los criterios de éxito están definidos
 
-## Process
+## Proceso
 
-### 1. Read Project Context
+### 1. Leer Contexto del Proyecto
 
-Read `docs/project-status.md` to understand:
-- Current phase
-- Stakeholders
-- Project context
+Leer `docs/project-status.md` para comprender:
+- Fase actual
+- Interesados
+- Contexto del proyecto
 
-### 2. Copy Template
+### 2. Copiar Plantilla
 
-Copy `docs-eng-process/templates/vision.md` to `docs/vision.md`
+Copiar `docs-eng-process/templates/vision.md` a `docs/vision.md`
 
-### 3. Fill in Vision Document
+### 3. Completar el Documento de Visión
 
-Update the vision document with:
-- **Project name**: `$ARGUMENTS[project_name]`
-- **Problem statement**: `$ARGUMENTS[problem_statement]`
-- **Positioning**: What makes this solution unique
-- **Stakeholders**: Key stakeholders and their needs
-- **Key features**: High-level feature list
-- **Constraints**: Technical, business, or other constraints
+Actualizar el documento de visión con:
+- **Nombre del proyecto**: `$ARGUMENTS[project_name]`
+- **Planteamiento del problema**: `$ARGUMENTS[problem_statement]`
+- **Posicionamiento**: Qué hace única a esta solución
+- **Interesados**: Interesados clave y sus necesidades
+- **Funcionalidades clave**: Lista de funcionalidades a alto nivel
+- **Restricciones**: Técnicas, de negocio u otras restricciones
 
-### 4. Validate Completeness
+### 4. Validar Completitud
 
-Ensure the vision document includes:
-- Clear problem statement
-- Proposed solution overview
-- Stakeholder descriptions
-- Key features and benefits
-- Success criteria
+Asegurar que el documento de visión incluya:
+- Planteamiento del problema claro
+- Visión general de la solución propuesta
+- Descripciones de los interesados
+- Funcionalidades y beneficios clave
+- Criterios de éxito
 
-## Output
+## Salida
 
-Returns:
-- Path to created vision document
-- List of sections filled in
-- Any sections that need manual completion
+Devuelve:
+- Ruta al documento de visión creado
+- Lista de secciones completadas
+- Secciones que requieren completarse manualmente
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| Template not found | Template path incorrect | Verify `docs-eng-process/templates/vision.md` exists |
-| File already exists | Vision document already created | Update existing file or confirm overwrite |
-| Missing arguments | Required arguments not provided | Provide project_name and problem_statement |
+| Plantilla no encontrada | Ruta de plantilla incorrecta | Verificar que `docs-eng-process/templates/vision.md` existe |
+| El archivo ya existe | El documento de visión ya fue creado | Actualizar el archivo existente o confirmar sobrescritura |
+| Argumentos ausentes | Argumentos requeridos no proporcionados | Proporcionar project_name y problem_statement |
 
-## References
+## Referencias
 
-- Vision Template: `docs-eng-process/templates/vision.md`
-- Vision Work Product: `docs-eng-process/openup-knowledge-base/core/common/workproducts/vision.md`
-- Analyst Role: `docs-eng-process/openup-knowledge-base/core/role/roles/analyst-6.md`
+- Plantilla de Visión: `docs-eng-process/templates/vision.md`
+- Producto de Trabajo de Visión: `docs-eng-process/openup-knowledge-base/core/common/workproducts/vision.md`
+- Rol de Analista: `docs-eng-process/openup-knowledge-base/core/role/roles/analyst-6.md`
 
-## See Also
+## Ver También
 
-- [openup-inception](../../openup-phases/inception/SKILL.md) - Inception phase guidance
-- [openup-create-use-case](../create-use-case/SKILL.md) - Create detailed use cases
-- [openup-create-risk-list](../create-risk-list/SKILL.md) - Document project risks
+- [openup-inception](../../openup-phases/inception/SKILL.md) - Guía de la fase de Inicio
+- [openup-create-use-case](../create-use-case/SKILL.md) - Crear casos de uso detallados
+- [openup-create-risk-list](../create-risk-list/SKILL.md) - Documentar riesgos del proyecto

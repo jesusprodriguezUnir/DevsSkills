@@ -1,112 +1,112 @@
 ---
 name: openup-create-test-plan
-description: Generate test cases and test plan from use cases and requirements
+description: Genera casos de prueba y plan de pruebas a partir de casos de uso y requisitos
 arguments:
   - name: scope
-    description: What to test (e.g., specific feature, use case)
+    description: Qué probar (ej. funcionalidad específica, caso de uso)
     required: true
 ---
 
-# Create Test Plan
+# Crear Plan de Pruebas
 
-This skill generates test cases and test documentation from the OpenUP templates.
+Esta skill genera casos de prueba y documentación de testing a partir de las plantillas OpenUP.
 
-## When to Use
+## Cuándo Usar
 
-Use this skill when:
-- Need to create test cases for features or use cases
-- In Elaboration or Construction phase planning tests
-- Starting testing for a new feature
-- Need to document test procedures
-- Creating test scripts for automation
+Usa esta skill cuando:
+- Necesites crear casos de prueba para funcionalidades o casos de uso
+- Estés en la fase de Elaboración o Construcción planificando pruebas
+- Comiences las pruebas de una nueva funcionalidad
+- Necesites documentar procedimientos de prueba
+- Crees scripts de prueba para automatización
 
-## When NOT to Use
+## Cuándo NO Usar
 
-Do NOT use this skill when:
-- Looking to execute tests (use test runner)
-- Need to debug test failures (use debugging tools)
-- Test plan exists and only minor updates needed (edit directly)
-- Looking for test reports (use test reporting)
+NO uses esta skill cuando:
+- Quieras ejecutar pruebas (usa el ejecutor de tests)
+- Necesites depurar fallos en tests (usa herramientas de depuración)
+- El plan de pruebas existe y solo necesita cambios menores (edítalo directamente)
+- Busques informes de pruebas (usa los reportes de testing)
 
-## Success Criteria
+## Criterios de Éxito
 
-After using this skill, verify:
-- [ ] Test cases exist in `docs/test-cases/`
-- [ ] Test scripts exist in `docs/test-scripts/`
-- [ ] Test coverage includes happy path and edge cases
-- [ ] Expected results are defined
-- [ ] Test procedures are documented
+Tras usar esta skill, verifica:
+- [ ] Los casos de prueba existen en `docs/test-cases/`
+- [ ] Los scripts de prueba existen en `docs/test-scripts/`
+- [ ] La cobertura incluye camino feliz y casos límite
+- [ ] Los resultados esperados están definidos
+- [ ] Los procedimientos de prueba están documentados
 
-## Process
+## Proceso
 
-### 1. Read Requirements
+### 1. Leer Requisitos
 
-Read relevant documentation:
-- `docs/use-cases/*.md` for use cases
-- `docs/requirements/*.md` for requirements
-- Any design documents for the `$ARGUMENTS[scope]`
+Leer la documentación relevante:
+- `docs/use-cases/*.md` para casos de uso
+- `docs/requirements/*.md` para requisitos
+- Cualquier documento de diseño para el `$ARGUMENTS[scope]`
 
-### 2. Create Test Directory
+### 2. Crear Directorio de Pruebas
 
-Ensure `docs/test-cases/` and `docs/test-scripts/` directories exist.
+Asegurar que los directorios `docs/test-cases/` y `docs/test-scripts/` existen.
 
-### 3. Copy Templates
+### 3. Copiar Plantillas
 
-Copy templates as needed:
-- `docs-eng-process/templates/test-case.md` → `docs/test-cases/<name>-test-case.md`
-- `docs-eng-process/templates/test-script.md` → `docs/test-scripts/<name>-test-script.md`
+Copiar las plantillas según sea necesario:
+- `docs-eng-process/templates/test-case.md` → `docs/test-cases/<nombre>-test-case.md`
+- `docs-eng-process/templates/test-script.md` → `docs/test-scripts/<nombre>-test-script.md`
 
-### 4. Fill in Test Cases
+### 4. Completar los Casos de Prueba
 
-For each test case, document:
-- **Test case ID** and name
-- **Description**: What is being tested
-- **Preconditions**: State before test
-- **Test steps**: Step-by-step actions
-- **Expected results**: What should happen
-- **Postconditions**: State after test
-- **Priority**: Test priority level
+Para cada caso de prueba, documentar:
+- **ID del caso de prueba** y nombre
+- **Descripción**: Qué se está probando
+- **Precondiciones**: Estado antes de la prueba
+- **Pasos de prueba**: Acciones paso a paso
+- **Resultados esperados**: Qué debería ocurrir
+- **Postcondiciones**: Estado después de la prueba
+- **Prioridad**: Nivel de prioridad del test
 
-### 5. Fill in Test Scripts
+### 5. Completar los Scripts de Prueba
 
-For each test script, document:
-- **Test script ID** and name
-- **Purpose**: What the script validates
-- **Setup**: How to prepare for the test
-- **Test procedures**: Detailed test execution steps
-- **Cleanup**: How to clean up after test
+Para cada script de prueba, documentar:
+- **ID del script de prueba** y nombre
+- **Propósito**: Qué valida el script
+- **Configuración**: Cómo preparar la prueba
+- **Procedimientos de prueba**: Pasos detallados de ejecución
+- **Limpieza**: Cómo limpiar después de la prueba
 
-### 6. Validate Coverage
+### 6. Validar Cobertura
 
-Ensure test coverage includes:
-- Happy path scenarios
-- Edge cases
-- Error conditions
-- Integration points
+Asegurar que la cobertura de pruebas incluya:
+- Escenarios de camino feliz
+- Casos límite
+- Condiciones de error
+- Puntos de integración
 
-## Output
+## Salida
 
-Returns:
-- Paths to created test cases and scripts
-- Test coverage summary
-- Any gaps identified
+Devuelve:
+- Rutas a los casos de prueba y scripts creados
+- Resumen de cobertura de pruebas
+- Huecos identificados
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| Template not found | Template path incorrect | Verify `docs-eng-process/templates/test-case.md` and `test-script.md` exist |
-| Insufficient coverage | Only happy path tests | Add edge cases and error conditions |
-| Missing expected results | Test steps without validation | Define expected results for each test step |
+| Plantilla no encontrada | Ruta de plantilla incorrecta | Verificar que `docs-eng-process/templates/test-case.md` y `test-script.md` existen |
+| Cobertura insuficiente | Solo tests de camino feliz | Añadir casos límite y condiciones de error |
+| Resultados esperados ausentes | Pasos de prueba sin validación | Definir resultados esperados para cada paso |
 
-## References
+## Referencias
 
-- Test Case Template: `docs-eng-process/templates/test-case.md`
-- Test Script Template: `docs-eng-process/templates/test-script.md`
-- Tester Role: `docs-eng-process/openup-knowledge-base/core/role/roles/tester-5.md`
+- Plantilla de Caso de Prueba: `docs-eng-process/templates/test-case.md`
+- Plantilla de Script de Prueba: `docs-eng-process/templates/test-script.md`
+- Rol de Probador: `docs-eng-process/openup-knowledge-base/core/role/roles/tester-5.md`
 
-## See Also
+## Ver También
 
-- [openup-create-use-case](../create-use-case/SKILL.md) - Generate tests from use cases
-- [openup-construction](../../openup-phases/construction/SKILL.md) - Construction phase testing
-- [openup-phase-review](../../openup-workflow/phase-review/SKILL.md) - Review test coverage
+- [openup-create-use-case](../create-use-case/SKILL.md) - Generar pruebas desde casos de uso
+- [openup-construction](../../openup-phases/construction/SKILL.md) - Pruebas en la fase de Construcción
+- [openup-phase-review](../../openup-workflow/phase-review/SKILL.md) - Revisar cobertura de pruebas

@@ -1,93 +1,93 @@
 ---
 name: openup-create-pr
-description: Create a pull request with proper description linking to roadmap task context
+description: Crea un pull request con descripción estructurada vinculada al contexto de la tarea en la hoja de ruta
 arguments:
   - name: task_id
-    description: The task ID from roadmap (e.g., T-001). Auto-detected from branch name if not provided.
+    description: El ID de la tarea de la hoja de ruta (ej. T-001). Se detecta automáticamente del nombre de la rama si no se proporciona.
     required: false
   - name: branch
-    description: The branch to create PR from. Uses current branch if not provided.
+    description: La rama desde la que crear la PR. Usa la rama actual si no se proporciona.
     required: false
   - name: title
-    description: Custom PR title. Auto-generated from task if not provided.
+    description: Título personalizado de la PR. Se genera automáticamente de la tarea si no se proporciona.
     required: false
   - name: base
-    description: Base branch to merge into (e.g., main, develop). Auto-detected if not provided.
+    description: Rama base donde fusionar (ej. main, develop). Se detecta automáticamente si no se proporciona.
     required: false
 ---
 
-# Create Pull Request
+# Crear Pull Request
 
-Create a PR with a structured description linked to roadmap task context.
+Crea una PR con una descripción estructurada vinculada al contexto de la tarea en la hoja de ruta.
 
-## Process
+## Proceso
 
-### 1. Detect Current State
+### 1. Detectar Estado Actual
 
-1. Use `$ARGUMENTS[branch]` or `git rev-parse --abbrev-ref HEAD`.
-2. Check for unmerged commits: `git log <trunk>..HEAD --oneline`. Exit if none.
-3. Detect platform: `command -v gh` (GitHub) or `command -v glab` (GitLab).
-4. Verify remote: `git remote get-url origin`.
+1. Usar `$ARGUMENTS[branch]` o `git rev-parse --abbrev-ref HEAD`.
+2. Comprobar commits sin fusionar: `git log <tronco>..HEAD --oneline`. Salir si no hay ninguno.
+3. Detectar plataforma: `command -v gh` (GitHub) o `command -v glab` (GitLab).
+4. Verificar remoto: `git remote get-url origin`.
 
-### 2. Prepare Commits
+### 2. Preparar Commits
 
-1. **Trunk guard**: If on trunk (main/master/detected), create and switch to a feature branch (`git checkout -b feature/...` or `fix/...`).
-2. **Check uncommitted changes**: `git status --porcelain`. If clean, skip to step 3.
-3. **Organize atomic commits**: Group changes into logical units. Commit in dependency order (deps/config → types/interfaces → core logic → dependent features). Follow format from `docs-eng-process/conventions.md`.
-4. **Apply test strategy**: Bundle tests with feature commits. For bug fixes, commit failing test first, then the fix.
-5. **Lint before committing**: Run linter/formatter before each commit. Skip if none configured.
-6. Full rules: `commit-procedure.md` in `complete-task/`.
+1. **Protección de tronco**: Si estás en el tronco (main/master/detectado), crear y cambiar a una rama de funcionalidad (`git checkout -b feature/...` o `fix/...`).
+2. **Comprobar cambios sin confirmar**: `git status --porcelain`. Si está limpio, saltar al paso 3.
+3. **Organizar commits atómicos**: Agrupar cambios en unidades lógicas. Confirmar en orden de dependencia (deps/config → tipos/interfaces → lógica central → funcionalidades dependientes). Seguir el formato de `docs-eng-process/conventions.md`.
+4. **Aplicar estrategia de tests**: Empaquetar tests con los commits de funcionalidad. Para correcciones de errores, confirmar primero el test que falla, luego la corrección.
+5. **Lint antes de confirmar**: Ejecutar linter/formateador antes de cada commit. Omitir si no hay ninguno configurado.
+6. Reglas completas: `commit-procedure.md` en `complete-task/`.
 
-### 3. Extract Task Context
+### 3. Extraer Contexto de la Tarea
 
-1. Get task_id from `$ARGUMENTS[task_id]` or extract from branch name (regex `([Tt]-?\d+)`).
-2. Read `docs/roadmap.md`, find task section, extract description/priority/status.
-3. Generate title: `[<task_id>] <description>` or use `$ARGUMENTS[title]`.
+1. Obtener task_id de `$ARGUMENTS[task_id]` o extraer del nombre de la rama (regex `([Tt]-?\d+)`).
+2. Leer `docs/roadmap.md`, buscar la sección de la tarea, extraer descripción/prioridad/estado.
+3. Generar título: `[<task_id>] <descripción>` o usar `$ARGUMENTS[title]`.
 
-### 4. Detect Trunk Branch
+### 4. Detectar Rama Tronco
 
-Use `$ARGUMENTS[base]` if provided; otherwise follow trunk detection in `docs-eng-process/agent-workflow.md` (Branching SOP). Record detected trunk in run log.
+Usar `$ARGUMENTS[base]` si se proporciona; de lo contrario, seguir la detección de tronco en `docs-eng-process/agent-workflow.md` (Procedimiento de Ramas). Registrar el tronco detectado en el log de ejecución.
 
-### 5. Generate PR Description
+### 5. Generar Descripción de la PR
 
-Use template from `docs-eng-process/templates/pr-description.md` and populate:
-- Summary, Task Context (id, description, priority), Changes Made (git diff/log)
-- Testing Performed, Review Checklist, Related Issues, Breaking Changes, Notes
+Usar la plantilla de `docs-eng-process/templates/pr-description.md` y completar:
+- Resumen, Contexto de Tarea (id, descripción, prioridad), Cambios Realizados (git diff/log)
+- Pruebas Realizadas, Lista de Verificación de Revisión, Incidencias Relacionadas, Cambios Incompatibles, Notas
 
-### 6. Push Branch and Create PR
+### 6. Subir Rama y Crear PR
 
 ```bash
-git push -u origin <branch>
+git push -u origin <rama>
 # GitHub:
-gh pr create --base <base> --title "<title>" --body "<description>" --label "task:<task_id>"
+gh pr create --base <base> --title "<título>" --body "<descripción>" --label "tarea:<task_id>"
 # GitLab:
-glab mr create --base <base> --title "<title>" --description "<description>" --label "task:<task_id>"
+glab mr create --base <base> --title "<título>" --description "<descripción>" --label "tarea:<task_id>"
 ```
 
-### 7. Update Documentation (Optional)
+### 7. Actualizar Documentación (Opcional)
 
-- `docs/roadmap.md`: Add PR URL to task entry
-- `docs/project-status.md`: Note PR in Active Work Items
+- `docs/roadmap.md`: Añadir URL de la PR a la entrada de la tarea
+- `docs/project-status.md`: Anotar la PR en Elementos de Trabajo Activos
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| No unmerged commits | Branch up to date with trunk | Inform user no PR needed |
-| No remote configured | Git remote not set up | `git remote add origin <url>` |
-| CLI not installed | gh/glab not available | `brew install gh` or `brew install glab` |
-| No task_id found | Branch name has no task ID | Proceed without task context or provide manually |
-| Roadmap not found | docs/roadmap.md missing | Proceed without task context, inform user |
-| PR already exists | Branch already has open PR | Inform user of existing PR URL |
-| On trunk branch | Working directly on main/master | Auto-create feature branch before committing |
+| Sin commits pendientes | La rama está al día con el tronco | Informar al usuario de que no se necesita PR |
+| Remoto no configurado | El remoto de Git no está configurado | `git remote add origin <url>` |
+| CLI no instalado | gh/glab no disponible | `brew install gh` o `brew install glab` |
+| task_id no encontrado | El nombre de la rama no tiene ID de tarea | Continuar sin contexto de tarea o proporcionar manualmente |
+| Hoja de ruta no encontrada | docs/roadmap.md no existe | Continuar sin contexto de tarea, informar al usuario |
+| PR ya existe | La rama ya tiene una PR abierta | Informar al usuario de la URL de la PR existente |
+| En rama tronco | Trabajando directamente en main/master | Crear automáticamente una rama de funcionalidad antes de confirmar |
 
-## References
+## Referencias
 
-- Branching SOP: `docs-eng-process/agent-workflow.md`
-- PR Description Template: `docs-eng-process/templates/pr-description.md`
-- Roadmap: `docs/roadmap.md`
+- Procedimiento de Ramas: `docs-eng-process/agent-workflow.md`
+- Plantilla de Descripción de PR: `docs-eng-process/templates/pr-description.md`
+- Hoja de Ruta: `docs/roadmap.md`
 
-## See Also
+## Ver También
 
-- [openup-complete-task](../complete-task/SKILL.md) - Complete task and create PR
-- [openup-start-iteration](../start-iteration/SKILL.md) - Start iteration with branch creation
+- [openup-complete-task](../complete-task/SKILL.md) - Completar tarea y crear PR
+- [openup-start-iteration](../start-iteration/SKILL.md) - Iniciar iteración con creación de rama

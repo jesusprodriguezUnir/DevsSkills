@@ -1,107 +1,107 @@
 ---
 name: openup-create-architecture-notebook
-description: Generate or update architecture documentation from template
+description: Genera o actualiza la documentación de arquitectura a partir de la plantilla
 arguments:
   - name: system_name
-    description: Name of the system
+    description: Nombre del sistema
     required: true
   - name: architectural_concerns
-    description: Key architectural concerns to address
+    description: Preocupaciones arquitectónicas clave a abordar
     required: false
 ---
 
-# Create Architecture Notebook
+# Crear Cuaderno de Arquitectura
 
-This skill generates or updates an architecture notebook from the OpenUP template.
+Esta skill genera o actualiza un cuaderno de arquitectura a partir de la plantilla OpenUP.
 
-## When to Use
+## Cuándo Usar
 
-Use this skill when:
-- Starting Elaboration phase and need to document architecture
-- Making significant architectural decisions
-- Need to document system design and constraints
-- Establishing architecture baseline
-- Reviewing or updating existing architecture
+Usa esta skill cuando:
+- Comiences la fase de Elaboración y necesites documentar la arquitectura
+- Tomes decisiones arquitectónicas significativas
+- Necesites documentar el diseño y las restricciones del sistema
+- Establezcas la línea base de arquitectura
+- Revises o actualices la arquitectura existente
 
-## When NOT to Use
+## Cuándo NO Usar
 
-Do NOT use this skill when:
-- In Inception phase before architecture is defined (use `/openup-create-vision`)
-- Need detailed component design (use design documents)
-- Looking for implementation details (use code documentation)
-- Architecture notebook exists and only minor updates needed (edit directly)
+NO uses esta skill cuando:
+- Estés en la fase de Inicio antes de definir la arquitectura (usa `/openup-create-vision`)
+- Necesites diseño detallado de componentes (usa documentos de diseño)
+- Busques detalles de implementación (usa documentación del código)
+- El cuaderno de arquitectura existe y solo necesita cambios menores (edítalo directamente)
 
-## Success Criteria
+## Criterios de Éxito
 
-After using this skill, verify:
-- [ ] Architecture notebook exists at `docs/architecture-notebook.md`
-- [ ] System name and context are defined
-- [ ] Key architectural decisions are documented
-- [ ] Architectural constraints are listed
-- [ ] Quality attributes are specified
+Tras usar esta skill, verifica:
+- [ ] El cuaderno de arquitectura existe en `docs/architecture-notebook.md`
+- [ ] El nombre y contexto del sistema están definidos
+- [ ] Las decisiones arquitectónicas clave están documentadas
+- [ ] Las restricciones arquitectónicas están listadas
+- [ ] Los atributos de calidad están especificados
 
-## Process
+## Proceso
 
-### 1. Check for Existing Architecture
+### 1. Comprobar Arquitectura Existente
 
-Check if `docs/architecture-notebook.md` exists:
-- If yes, update it
-- If no, create from template
+Comprobar si `docs/architecture-notebook.md` existe:
+- Si existe, actualizarlo
+- Si no existe, crear desde la plantilla
 
-### 2. Read Project Context
+### 2. Leer Contexto del Proyecto
 
-Read `docs/project-status.md`, `docs/vision.md` to understand:
-- System requirements
-- Constraints
-- Stakeholder concerns
+Leer `docs/project-status.md` y `docs/vision.md` para comprender:
+- Requisitos del sistema
+- Restricciones
+- Preocupaciones de los interesados
 
-### 3. Copy Template (if new)
+### 3. Copiar Plantilla (si es nuevo)
 
-If creating new, copy `docs-eng-process/templates/architecture-notebook.md` to `docs/architecture-notebook.md`
+Si se crea nuevo, copiar `docs-eng-process/templates/architecture-notebook.md` a `docs/architecture-notebook.md`
 
-### 4. Fill in Architecture Notebook
+### 4. Completar el Cuaderno de Arquitectura
 
-Update with:
-- **System name**: `$ARGUMENTS[system_name]`
-- **Architectural concerns**: From `$ARGUMENTS[architectural_concerns]` or derived from requirements
-- **Architecture overview**: High-level system architecture
-- **Key architectural decisions**: Rationale for major decisions
-- **Constraints**: Technical and business constraints
-- **Quality attributes**: Performance, security, scalability requirements
-- **Subsystem decomposition**: Major system components
+Actualizar con:
+- **Nombre del sistema**: `$ARGUMENTS[system_name]`
+- **Preocupaciones arquitectónicas**: De `$ARGUMENTS[architectural_concerns]` o derivadas de los requisitos
+- **Visión general de la arquitectura**: Arquitectura del sistema a alto nivel
+- **Decisiones arquitectónicas clave**: Justificación de las decisiones principales
+- **Restricciones**: Restricciones técnicas y de negocio
+- **Atributos de calidad**: Requisitos de rendimiento, seguridad y escalabilidad
+- **Descomposición en subsistemas**: Componentes principales del sistema
 
-### 5. Validate Completeness
+### 5. Validar Completitud
 
-Ensure the architecture notebook includes:
-- System overview and context
-- Key architectural decisions with rationale
-- Architectural constraints
-- Quality attribute requirements
-- Subsystem/component decomposition
+Asegurar que el cuaderno de arquitectura incluya:
+- Visión general y contexto del sistema
+- Decisiones arquitectónicas clave con justificación
+- Restricciones arquitectónicas
+- Requisitos de atributos de calidad
+- Descomposición en subsistemas/componentes
 
-## Output
+## Salida
 
-Returns:
-- Path to architecture notebook
-- List of sections filled in
-- Architectural decisions documented
+Devuelve:
+- Ruta al cuaderno de arquitectura
+- Lista de secciones completadas
+- Decisiones arquitectónicas documentadas
 
-## Common Errors
+## Errores Comunes
 
-| Error | Cause | Solution |
+| Error | Causa | Solución |
 |-------|-------|----------|
-| Template not found | Template path incorrect | Verify `docs-eng-process/templates/architecture-notebook.md` exists |
-| Insufficient context | Vision/requirements not defined | Create vision document first |
-| Overwriting existing | Architecture notebook already exists | Update existing file instead of creating new |
+| Plantilla no encontrada | Ruta de plantilla incorrecta | Verificar que `docs-eng-process/templates/architecture-notebook.md` existe |
+| Contexto insuficiente | Visión/requisitos no definidos | Crear primero el documento de visión |
+| Sobrescribir existente | El cuaderno de arquitectura ya existe | Actualizar el archivo existente en lugar de crear uno nuevo |
 
-## References
+## Referencias
 
-- Architecture Notebook Template: `docs-eng-process/templates/architecture-notebook.md`
-- Architecture Notebook Work Product: `docs-eng-process/openup-knowledge-base/practice-technical/evolutionary_arch/base/workproducts/architecture-notebook-6.md`
-- Architect Role: `docs-eng-process/openup-knowledge-base/core/role/roles/architect-6.md`
+- Plantilla de Cuaderno de Arquitectura: `docs-eng-process/templates/architecture-notebook.md`
+- Producto de Trabajo de Arquitectura: `docs-eng-process/openup-knowledge-base/practice-technical/evolutionary_arch/base/workproducts/architecture-notebook-6.md`
+- Rol de Arquitecto: `docs-eng-process/openup-knowledge-base/core/role/roles/architect-6.md`
 
-## See Also
+## Ver También
 
-- [openup-elaboration](../../openup-phases/elaboration/SKILL.md) - Elaboration phase guidance
-- [openup-create-vision](../create-vision/SKILL.md) - Define vision before architecture
-- [openup-create-risk-list](../create-risk-list/SKILL.md) - Document technical risks
+- [openup-elaboration](../../openup-phases/elaboration/SKILL.md) - Guía de la fase de Elaboración
+- [openup-create-vision](../create-vision/SKILL.md) - Definir visión antes de la arquitectura
+- [openup-create-risk-list](../create-risk-list/SKILL.md) - Documentar riesgos técnicos

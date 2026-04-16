@@ -1,13 +1,13 @@
 ---
 name: dotnet-refactor
-description: Analiza y refactoriza código .NET Core aplicando principios SOLID, Clean Code y patrones de diseño. Detecta code smells, propone mejoras estructurales y genera el código refactorizado. Úsala al limpiar deuda técnica o mejorar mantenibilidad.
+description: Analiza y refactoriza código .NET Core aplicando principios SOLID, código limpio y patrones de diseño. Detecta malos olores de código, propone mejoras estructurales y genera el código refactorizado. Úsala al limpiar deuda técnica o mejorar mantenibilidad.
 license: Private
 compatibility: Requiere .NET 8+ SDK. Compatible con C# 12.
 ---
 
 # .NET Core — Refactorización Inteligente
 
-Skill para analizar código C#/.NET Core, detectar problemas de diseño y aplicar refactorizaciones guiadas por principios SOLID y Clean Code.
+Skill para analizar código C#/.NET Core, detectar problemas de diseño y aplicar refactorizaciones guiadas por principios SOLID y código limpio.
 
 ## Principios Guía
 
@@ -18,12 +18,12 @@ Skill para analizar código C#/.NET Core, detectar problemas de diseño y aplica
 
 ## Proceso de Análisis
 
-### Paso 1: Escanear Code Smells
+### Paso 1: Detectar Malos Olores de Código
 
 Revisa el código buscando estos indicadores:
 
-| Code Smell | Descripción | Severidad |
-|------------|-------------|-----------|
+| Indicador | Descripción | Severidad |
+|-----------|-------------|-----------|
 | **Método largo** | > 20 líneas de lógica | 🔴 Alta |
 | **Clase grande** | > 300 líneas o > 5 responsabilidades | 🔴 Alta |
 | **Parámetros excesivos** | > 4 parámetros en método | 🟡 Media |
@@ -31,25 +31,25 @@ Revisa el código buscando estos indicadores:
 | **Condicionales anidados** | > 2 niveles de if/else | 🟡 Media |
 | **Nombres ambiguos** | Variables como `x`, `temp`, `data` | 🟡 Media |
 | **Comentarios excesivos** | El código necesita explicación constante | 🟠 Media |
-| **Feature Envy** | Método usa más datos de otra clase | 🟡 Media |
-| **Magic Numbers** | Literales sin nombre semántico | 🟡 Media |
-| **Dead Code** | Código inalcanzable o sin usar | 🟢 Baja |
+| **Envidia de funcionalidad** | Método usa más datos de otra clase | 🟡 Media |
+| **Números mágicos** | Literales sin nombre semántico | 🟡 Media |
+| **Código muerto** | Código inalcanzable o sin usar | 🟢 Baja |
 
 ### Paso 2: Clasificar por Principio SOLID Violado
 
 ```
-[S] Single Responsibility → Extraer clase/método
-[O] Open/Closed           → Aplicar Strategy/Template Method
-[L] Liskov Substitution   → Revisar herencia, preferir composición
-[I] Interface Segregation  → Dividir interfaces grandes
-[D] Dependency Inversion   → Inyectar abstracciones
+[S] Responsabilidad Única    → Extraer clase/método
+[O] Abierto/Cerrado          → Aplicar Strategy/Template Method
+[L] Sustitución de Liskov    → Revisar herencia, preferir composición
+[I] Segregación de Interfaces → Dividir interfaces grandes
+[D] Inversión de Dependencias → Inyectar abstracciones
 ```
 
 ### Paso 3: Aplicar Refactorizaciones
 
 ## Catálogo de Refactorizaciones
 
-### 1. Extract Method
+### 1. Extraer Método
 **Cuándo**: Bloque de código con comentario explicativo.
 
 ```csharp
@@ -89,7 +89,7 @@ private void ValidateStock(Order order) { /* ... */ }
 private decimal CalculateTotal(IEnumerable<OrderItem> items) { /* ... */ }
 ```
 
-### 2. Replace Conditional with Polymorphism
+### 2. Reemplazar Condicional con Polimorfismo
 **Cuándo**: Switch/if-else sobre un tipo para diferentes comportamientos.
 
 ```csharp
@@ -116,11 +116,11 @@ public class StandardShipping : IShippingCalculator
     public decimal Calculate(Order order) => order.Weight * 0.5m;
 }
 
-// Registrar en DI:
+// Registrar en inyección de dependencias:
 services.AddKeyedScoped<IShippingCalculator, StandardShipping>("standard");
 ```
 
-### 3. Introduce Parameter Object
+### 3. Introducir Objeto de Parámetros
 **Cuándo**: Método con más de 3-4 parámetros relacionados.
 
 ```csharp
@@ -139,7 +139,7 @@ public record ReportRequest(
 public Report Generate(ReportRequest request)
 ```
 
-### 4. Replace Exception with Result
+### 4. Reemplazar Excepción con Resultado
 **Cuándo**: Excepciones usadas como flujo de control.
 
 ```csharp
@@ -161,7 +161,7 @@ public Result<User> GetUser(Guid id)
 }
 ```
 
-### 5. Extract Service (SRP)
+### 5. Extraer Servicio (Responsabilidad Única)
 **Cuándo**: Clase con múltiples responsabilidades.
 
 ```csharp
@@ -190,7 +190,7 @@ Al finalizar el análisis, genera un informe con esta estructura:
 
 ### Resumen
 - **Archivos analizados**: X
-- **Code smells detectados**: Y
+- **Malos olores detectados**: Y
 - **Refactorizaciones aplicadas**: Z
 
 ### Hallazgos por Severidad
@@ -201,17 +201,17 @@ Al finalizar el análisis, genera un informe con esta estructura:
 ### Detalle por Archivo
 | Archivo | Smell | Refactorización | Estado |
 |---------|-------|-----------------|--------|
-| UserService.cs | Clase grande (450 líneas) | Extract Service | ✅ Aplicada |
-| OrderHandler.cs | Condicionales anidados (4 niveles) | Guard Clauses | ✅ Aplicada |
+| UserService.cs | Clase grande (450 líneas) | Extraer Servicio | ✅ Aplicada |
+| OrderHandler.cs | Condicionales anidados (4 niveles) | Cláusulas de Guarda | ✅ Aplicada |
 
 ### Tests Verificados
 - [ ] Tests existentes siguen pasando
 - [ ] Nuevos tests añadidos para código extraído
 ```
 
-## Checklist de Calidad Post-Refactorización
+## Lista de Verificación Post-Refactorización
 
-- [ ] Todos los tests pasan (green bar)
+- [ ] Todos los tests pasan (barra verde)
 - [ ] No se agregó funcionalidad nueva (solo restructuración)
 - [ ] Los nombres reflejan la intención del código
 - [ ] No hay código duplicado

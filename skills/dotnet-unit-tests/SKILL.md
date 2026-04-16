@@ -16,7 +16,7 @@ Skill para crear, organizar y mantener tests unitarios de alta calidad en proyec
 3. **Tests independientes** — nunca dependan del orden de ejecución.
 4. **Nombres descriptivos** — `Método_Escenario_ResultadoEsperado`.
 
-## Stack Recomendado
+## Tecnologías Recomendadas
 
 | Paquete | Propósito |
 |---------|-----------|
@@ -78,7 +78,7 @@ public class UserServiceTests
 {
     private readonly IUserRepository _userRepository;
     private readonly ILogger<UserService> _logger;
-    private readonly UserService _sut; // System Under Test
+    private readonly UserService _sut; // Sistema Bajo Prueba
 
     public UserServiceTests()
     {
@@ -91,7 +91,7 @@ public class UserServiceTests
 
 ### Paso 3: Generar Tests por Categoría
 
-#### Happy Path
+#### Camino Feliz (Happy Path)
 ```csharp
 [Fact]
 public async Task GetById_ConIdExistente_RetornaUsuario()
@@ -110,7 +110,7 @@ public async Task GetById_ConIdExistente_RetornaUsuario()
 }
 ```
 
-#### Error / Edge Cases
+#### Errores y Casos Límite
 ```csharp
 [Fact]
 public async Task GetById_ConIdInexistente_RetornaNull()
@@ -193,9 +193,9 @@ dotnet test --collect:"XPlat Code Coverage"
 dotnet tool run reportgenerator -reports:**/coverage.cobertura.xml -targetdir:coverage-report
 ```
 
-## Checklist de Calidad
+## Lista de Verificación de Calidad
 
-- [ ] Cada método público tiene al menos un test happy-path
+- [ ] Cada método público tiene al menos un test de camino feliz
 - [ ] Cada excepción documentada tiene un test
 - [ ] Los mocks verifican interacciones clave
 - [ ] No hay `Thread.Sleep` ni dependencias de tiempo real
@@ -207,16 +207,16 @@ dotnet tool run reportgenerator -reports:**/coverage.cobertura.xml -targetdir:co
 
 | Error | Solución |
 |-------|----------|
-| Test depende de DB real | Usar mocks o testcontainers |
-| Assert múltiples sin relación | Dividir en tests separados |
-| Setup compartido mutable | Usar constructor de xUnit (nuevo por test) |
-| Ignorar async/await | Siempre retornar Task en tests async |
-| Hardcodear fechas | Inyectar `IDateTimeProvider` |
+| Test depende de BD real | Usar mocks o testcontainers |
+| Asserts múltiples sin relación | Dividir en tests separados |
+| Configuración compartida mutable | Usar constructor de xUnit (nuevo por test) |
+| Ignorar async/await | Siempre retornar Task en tests asíncronos |
+| Fechas fijas en el código | Inyectar `IDateTimeProvider` |
 
 ## Integración con CI/CD
 
 ```yaml
-# GitHub Actions
+# Ejemplo en GitHub Actions
 - name: Run Tests
   run: dotnet test --configuration Release --logger "trx" --results-directory TestResults
   

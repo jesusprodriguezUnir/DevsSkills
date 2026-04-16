@@ -1,20 +1,20 @@
 ---
 name: dotnet-code-review
-description: Analiza Pull Requests en proyectos .NET Core realizando code review automatizado. Evalúa calidad, seguridad, rendimiento, convenciones y tests. Genera un informe detallado con puntuación y recomendaciones accionables. Úsala para revisiones de PRs o auditorías de código.
+description: Analiza Pull Requests en proyectos .NET Core realizando revisión de código automatizada. Evalúa calidad, seguridad, rendimiento, convenciones y tests. Genera un informe detallado con puntuación y recomendaciones accionables. Úsala para revisiones de PRs o auditorías de código.
 license: Private
 compatibility: Requiere .NET 8+ SDK. Funciona con diffs de Git y archivos C#.
 ---
 
-# .NET Core — Code Review de Pull Requests
+# .NET Core — Revisión de Código de Pull Requests
 
-Skill para analizar Pull Requests de proyectos .NET Core y generar informes de code review detallados con puntuación y recomendaciones.
+Skill para analizar Pull Requests de proyectos .NET Core y generar informes de revisión de código detallados con puntuación y recomendaciones.
 
 ## Cuándo Usar
 
 - Al recibir una PR para revisión
-- Antes de merge a `main` o `develop`
+- Antes de fusionar a `main` o `develop`
 - Para auditorías de calidad de código
-- Como segundo par de ojos tras review humano
+- Como segundo par de ojos tras revisión humana
 
 ## Dimensiones de Evaluación
 
@@ -23,13 +23,13 @@ El análisis cubre 6 dimensiones, cada una con peso diferente:
 | Dimensión | Peso | Qué Evalúa |
 |-----------|------|-------------|
 | 🏗️ **Arquitectura** | 25% | Separación de capas, DI, patrones |
-| 🔒 **Seguridad** | 20% | Vulnerabilidades, secrets, validación de input |
-| ⚡ **Rendimiento** | 15% | Queries N+1, allocations, async/await |
-| 📐 **Convenciones** | 15% | Naming, formato, estilo del equipo |
-| 🧪 **Testing** | 15% | Cobertura, calidad de tests, casos edge |
+| 🔒 **Seguridad** | 20% | Vulnerabilidades, secretos, validación de entrada |
+| ⚡ **Rendimiento** | 15% | Consultas N+1, asignaciones, async/await |
+| 📐 **Convenciones** | 15% | Nomenclatura, formato, estilo del equipo |
+| 🧪 **Testing** | 15% | Cobertura, calidad de tests, casos límite |
 | 📖 **Legibilidad** | 10% | Claridad, complejidad, documentación |
 
-## Proceso de Review
+## Proceso de Revisión
 
 ### Paso 1: Analizar el Contexto de la PR
 
@@ -37,7 +37,7 @@ Leer:
 - **Título y descripción** de la PR
 - **Commits** incluidos (mensajes y tamaño)
 - **Archivos modificados** (lista y estadísticas)
-- **Issue o ticket** vinculado
+- **Incidencia o ticket** vinculado
 
 Evaluar:
 ```
@@ -48,14 +48,14 @@ Evaluar:
 ❌ PR sin descripción → solicitar contexto
 ```
 
-### Paso 2: Review de Arquitectura (25%)
+### Paso 2: Revisión de Arquitectura (25%)
 
 #### Verificaciones
 
 ```
 □ ¿Respeta la separación de capas (Domain → Application → Infrastructure)?
-□ ¿Las dependencias apuntan hacia adentro (Dependency Inversion)?
-□ ¿Los nuevos servicios se registran en DI correctamente?
+□ ¿Las dependencias apuntan hacia adentro (Inversión de Dependencias)?
+□ ¿Los nuevos servicios se registran en la inyección de dependencias correctamente?
 □ ¿Se usan interfaces para abstracciones?
 □ ¿Los DTOs son independientes de las entidades de dominio?
 □ ¿Se aplican los patrones del proyecto (CQRS, Repository, etc.)?
@@ -91,16 +91,16 @@ public async Task<IActionResult> Create(CreateUserCommand command)
 }
 ```
 
-### Paso 3: Review de Seguridad (20%)
+### Paso 3: Revisión de Seguridad (20%)
 
-#### Checklist Crítico
+#### Lista de Verificación Crítica
 
 ```
-□ No hay secrets/contraseñas hardcodeadas
+□ No hay secretos/contraseñas escritos directamente en el código
 □ Los inputs del usuario se validan (FluentValidation / Data Annotations)
 □ Las queries usan parámetros (no string interpolation de SQL)
 □ Los endpoints tienen [Authorize] apropiado
-□ No se exponen stack traces en producción
+□ No se exponen trazas de error en producción
 □ Se sanitiza output para prevenir XSS
 □ Los archivos subidos se validan (tipo, tamaño)
 □ CORS está configurado correctamente
@@ -109,10 +109,10 @@ public async Task<IActionResult> Create(CreateUserCommand command)
 #### Patrones Peligrosos
 
 ```csharp
-// ❌ SQL Injection
+// ❌ Inyección SQL
 var query = $"SELECT * FROM Users WHERE Email = '{email}'";
 
-// ❌ Secret hardcodeado
+// ❌ Secreto escrito directamente en el código
 var apiKey = "sk-1234567890abcdef";
 
 // ❌ Información sensible en logs
@@ -129,12 +129,12 @@ JsonConvert.DeserializeObject<object>(untrustedInput, new JsonSerializerSettings
 public async Task<IActionResult> Delete(Guid id) // ¿Dónde está [Authorize]?
 ```
 
-### Paso 4: Review de Rendimiento (15%)
+### Paso 4: Revisión de Rendimiento (15%)
 
 #### Problemas Comunes
 
 ```csharp
-// ❌ N+1 Query
+// ❌ Consulta N+1
 var orders = await _context.Orders.ToListAsync();
 foreach (var order in orders)
 {
@@ -143,18 +143,18 @@ foreach (var order in orders)
         .ToListAsync(); // ¡N queries adicionales!
 }
 
-// ✅ Eager loading
+// ✅ Carga anticipada
 var orders = await _context.Orders
     .Include(o => o.Items)
     .ToListAsync();
 
-// ❌ Async sin await (fire and forget)
+// ❌ Async sin await (lanzar y olvidar)
 public void ProcessOrder(Order order)
 {
     _emailService.SendAsync(order.Email, "Confirmación"); // ¡No se espera!
 }
 
-// ❌ Allocation innecesaria en hot path
+// ❌ Asignación innecesaria en ruta crítica
 public string GetDisplayName(User user)
 {
     return $"{user.FirstName} {user.LastName}".Trim(); // Nuevo string cada vez
@@ -166,35 +166,35 @@ var count = _context.Users.ToList().Count(); // ¡Carga TODA la tabla!
 var count = await _context.Users.CountAsync();
 ```
 
-### Paso 5: Review de Convenciones (15%)
+### Paso 5: Revisión de Convenciones (15%)
 
 ```
 □ PascalCase para clases, métodos, propiedades públicas
 □ camelCase para variables locales y parámetros
 □ _camelCase para campos privados
-□ Async suffix en métodos async
+□ Sufijo Async en métodos asíncronos
 □ Interfaces con prefijo I
-□ Namespaces coinciden con la estructura de carpetas
+□ Los Namespaces coinciden con la estructura de carpetas
 □ Archivos nombrados como la clase que contienen
 □ Regiones evitadas (señal de clase grande)
-□ Using statements ordenados y sin duplicados
+□ Sentencias Using ordenadas y sin duplicados
 ```
 
-### Paso 6: Review de Testing (15%)
+### Paso 6: Revisión de Testing (15%)
 
 ```
 □ ¿Los cambios incluyen tests nuevos o actualizados?
-□ ¿Los tests cubren happy path Y edge cases?
+□ ¿Los tests cubren camino feliz Y casos límite?
 □ ¿Los tests son independientes (no dependen del orden)?
 □ ¿Los mocks verifican interacciones correctas?
-□ ¿Hay tests de integración para cambios de infrastructure?
+□ ¿Hay tests de integración para cambios de infraestructura?
 □ ¿La cobertura del código nuevo es ≥ 80%?
 ```
 
 #### Señales de Alerta en Tests
 
 ```csharp
-// ❌ Test sin assert
+// ❌ Test sin verificación
 [Fact]
 public async Task Create_ShouldWork()
 {
@@ -217,7 +217,7 @@ public void Delete_ShouldCallRepositoryThenLoggerThenCacheThenEventBus()
 }
 ```
 
-### Paso 7: Review de Legibilidad (10%)
+### Paso 7: Revisión de Legibilidad (10%)
 
 ```
 □ ¿El código es autoexplicativo sin comentarios?
@@ -230,7 +230,7 @@ public void Delete_ShouldCallRepositoryThenLoggerThenCacheThenEventBus()
 ## Formato del Informe
 
 ```markdown
-# Code Review — PR #{número}: {título}
+# Revisión de Código — PR #{número}: {título}
 
 ## 📊 Puntuación General: {X}/100
 
@@ -296,8 +296,8 @@ await _repository.SaveAsync(cancellationToken);
 
 ## Etiquetas de Severidad
 
-- `❌ Bloqueante` — Debe corregirse antes del merge
+- `❌ Bloqueante` — Debe corregirse antes de fusionar
 - `⚠️ Importante` — Debería corregirse, pero no bloquea
 - `💡 Sugerencia` — Mejora opcional
-- `❓ Pregunta` — Necesita clarificación del autor
+- `❓ Pregunta` — Necesita aclaración del autor
 - `✨ Bien hecho` — Refuerzo positivo
