@@ -1,0 +1,156 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SkillCard from '../components/SkillCard.astro';
+import { getCollection } from 'astro:content';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const allSkills = await getCollection('skills');
+
+const skillsWithContent = allSkills.map((skill) => {
+  const filePath = path.join(process.cwd(), 'src/content/skills', `${skill.id}.md`);
+  const fullContent = fs.readFileSync(filePath, 'utf-8');
+  // Strip frontmatter if we only want the body, or keep it if we want the full file
+  const body = fullContent.replace(/^---[\s\S]*?---\n?/, '');
+  return { ...skill, body };
+});
+
+const principles = [
+  { title: "ThinkBeforeCoding", icon: "🧠" },
+  { title: "SimplicityFirst", icon: "✨" },
+  { title: "SurgicalChanges", icon: "🎯" },
+  { title: "GoalDriven", icon: "🚀" }
+];
+---
+
+<Layout title="MySkills | AI Agent Hub">
+  <main>
+    <header class="fade-in">
+      <div class="header-content">
+        <h1>MySkills Hub</h1>
+        <p class="subtitle">Repositorio centralizado de skills y prompts para agentes autónomos.</p>
+      </div>
+      
+      <div class="principles-banner glass">
+        {principles.map(p => (
+          <div class="principle">
+            <span class="icon">{p.icon}</span>
+            <span class="name">{p.title}</span>
+          </div>
+        ))}
+      </div>
+    </header>
+
+    <section class="skills-section">
+      <div class="section-header">
+        <h2>Skills Disponibles</h2>
+        <div class="count-badge">{allSkills.length} SKILLS</div>
+      </div>
+
+      <div class="skills-grid">
+        {skillsWithContent.map((skill) => (
+          <SkillCard 
+            title={skill.data.title}
+            category={skill.data.category}
+            description={skill.data.description}
+            rawContent={skill.body}
+            tags={skill.data.tags}
+          />
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  header {
+    margin-bottom: 5rem;
+    text-align: center;
+  }
+
+  .header-content h1 {
+    font-size: 4rem;
+    background: linear-gradient(to right, #fff, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+  }
+
+  .principles-banner {
+    display: flex;
+    justify-content: space-around;
+    padding: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .principle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+  }
+
+  .icon {
+    font-size: 1.2rem;
+  }
+
+  .skills-section {
+    margin-top: 4rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-header h2 {
+    font-size: 2rem;
+  }
+
+  .count-badge {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.2rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .header-content h1 {
+      font-size: 2.5rem;
+    }
+    
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .principles-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem;
+    }
+  }
+</style>
