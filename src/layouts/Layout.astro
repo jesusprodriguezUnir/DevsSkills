@@ -18,6 +18,23 @@ const { title } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+          return 'light';
+        }
+        return 'dark';
+      })();
+      if (theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+      window.localStorage.setItem('theme', theme);
+    </script>
   </head>
   <body>
     <div class="background-effects">
@@ -59,6 +76,8 @@ const { title } = Astro.props;
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    --overlay-color: 14, 14, 20;
+    --pre-bg: rgba(0, 0, 0, 0.3);
   }
 
   * {
@@ -147,6 +166,34 @@ const { title } = Astro.props;
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent);
     -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent);
+  }
+
+  html[data-theme="light"] {
+    --bg-color: #f8fafc;
+    --bg-surface: rgba(255, 255, 255, 0.8);
+    --card-bg: rgba(255, 255, 255, 0.65);
+    --card-bg-hover: rgba(255, 255, 255, 0.9);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.15);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    --accent: #6366f1;
+    --accent-bright: #4f46e5;
+    --accent-glow: rgba(99, 102, 241, 0.15);
+    --accent-glow-strong: rgba(99, 102, 241, 0.3);
+    --green: #10b981;
+    --green-glow: rgba(16, 185, 129, 0.15);
+    --amber: #f59e0b;
+    --rose: #f43f5e;
+    --overlay-color: 255, 255, 255;
+    --pre-bg: rgba(0, 0, 0, 0.04);
+  }
+
+  html[data-theme="light"] .grid-overlay {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
   }
 
   main {

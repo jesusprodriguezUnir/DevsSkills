@@ -10,12 +10,13 @@ interface Props {
   zipSize: number;
   subdirs: string[];
   body: string;
+  bodyEs?: string | null;
   downloadUrl: string;
   image?: string | null;
   index: number;
 }
 
-const { id, name, description, category, license, fileCount, rawSize, zipSize, subdirs, body, downloadUrl, image, index } = Astro.props;
+const { id, name, description, category, license, fileCount, rawSize, zipSize, subdirs, body, bodyEs, downloadUrl, image, index } = Astro.props;
 
 const categoryConfig: Record<string, { icon: string; color: string; bg: string }> = {
   'OpenUP': { icon: '🔄', color: '#818cf8', bg: 'rgba(129, 140, 248, 0.1)' },
@@ -78,7 +79,7 @@ const delay = Math.min(index * 50, 600);
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
       Ver contenido
     </button>
-    <a class="btn btn-primary" href={downloadUrl} download>
+    <a href={downloadUrl} class="btn btn-primary" download>
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Descargar .zip
     </a>
@@ -96,12 +97,31 @@ const delay = Math.min(index * 50, 600);
         </span>
         <h2>{name}</h2>
       </div>
-      <button class="modal-close" data-modal-close={modalId} aria-label="Cerrar">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <div class="modal-header-actions">
+        {bodyEs && (
+          <button class="lang-toggle" data-target={modalId} data-lang="en" aria-label="Cambiar idioma" title="Ver en Español">
+            <span class="flag-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 500" width="20" height="14" style="border-radius: 2px;">
+                <rect width="750" height="500" fill="#c60b1e"/>
+                <rect y="125" width="750" height="250" fill="#ffc400"/>
+              </svg>
+            </span>
+          </button>
+        )}
+        <button class="modal-close" data-modal-close={modalId} aria-label="Cerrar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
     </div>
     <div class="modal-body">
-      <pre><code>{body}</code></pre>
+      <div id={`content-en-${id}`}>
+        <pre><code>{body}</code></pre>
+      </div>
+      {bodyEs && (
+        <div id={`content-es-${id}`} style="display: none;">
+          <pre><code>{bodyEs}</code></pre>
+        </div>
+      )}
     </div>
     <div class="modal-footer">
       <a class="btn btn-primary btn-lg" href={downloadUrl} download>
@@ -150,6 +170,39 @@ const delay = Math.min(index * 50, 600);
         document.body.style.overflow = '';
       }
     });
+
+    // Language toggle
+    document.querySelectorAll<HTMLButtonElement>('.lang-toggle').forEach(btn => {
+      // Remove old listeners to prevent duplicates during view transitions
+      const newBtn = btn.cloneNode(true) as HTMLButtonElement;
+      btn.parentNode?.replaceChild(newBtn, btn);
+      
+      newBtn.addEventListener('click', () => {
+        const modalId = newBtn.getAttribute('data-target')!;
+        const id = modalId.replace('modal-', '');
+        const currentLang = newBtn.getAttribute('data-lang');
+        
+        const contentEn = document.getElementById(`content-en-${id}`);
+        const contentEs = document.getElementById(`content-es-${id}`);
+        const flagSpan = newBtn.querySelector('.flag-icon')!;
+
+        if (currentLang === 'en') {
+          // Switch to Spanish
+          if (contentEn) contentEn.style.display = 'none';
+          if (contentEs) contentEs.style.display = 'block';
+          newBtn.setAttribute('data-lang', 'es');
+          newBtn.title = "View in English";
+          flagSpan.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="20" height="14" style="border-radius: 2px;"><clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="t"><path d="M30,15 h30 v15 z v-15 h-30 z h-30 v-15 z v15 h30 z"/></clipPath><g clip-path="url(#s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>';
+        } else {
+          // Switch to English
+          if (contentEn) contentEn.style.display = 'block';
+          if (contentEs) contentEs.style.display = 'none';
+          newBtn.setAttribute('data-lang', 'en');
+          newBtn.title = "Ver en Español";
+          flagSpan.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 500" width="20" height="14" style="border-radius: 2px;"><rect width="750" height="500" fill="#c60b1e"/><rect y="125" width="750" height="250" fill="#ffc400"/></svg>';
+        }
+      });
+    });
   }
 
   setupSkillCards();
@@ -179,7 +232,7 @@ const delay = Math.min(index * 50, 600);
   .image-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, transparent 60%, rgba(14, 14, 20, 0.9));
+    background: linear-gradient(to bottom, transparent 60%, rgba(var(--overlay-color), 0.9));
   }
 
   .skill-card:hover .card-image {
@@ -417,6 +470,33 @@ const delay = Math.min(index * 50, 600);
     color: var(--text-primary);
   }
 
+  .modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .lang-toggle {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    padding-bottom: 2px;
+  }
+
+  .lang-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-hover);
+  }
+
   .modal-close {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-color);
@@ -451,7 +531,7 @@ const delay = Math.min(index * 50, 600);
     font-size: 0.82rem;
     line-height: 1.8;
     color: var(--text-secondary);
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--pre-bg);
     padding: 1.5rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);

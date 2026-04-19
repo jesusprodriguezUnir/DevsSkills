@@ -130,6 +130,7 @@ async function main() {
   for (const skillName of skillDirs) {
     const skillDir = path.join(SKILLS_DIR, skillName);
     const skillMdPath = path.join(skillDir, 'SKILL.md');
+    const skillEsMdPath = path.join(skillDir, 'SKILL_es.md');
 
     if (!fs.existsSync(skillMdPath)) {
       console.log(`  ⚠ Skipping ${skillName} (no SKILL.md)`);
@@ -139,6 +140,12 @@ async function main() {
     const raw = fs.readFileSync(skillMdPath, 'utf-8');
     const meta = parseFrontmatter(raw);
     const body = getBody(raw);
+
+    let bodyEs = null;
+    if (fs.existsSync(skillEsMdPath)) {
+      const rawEs = fs.readFileSync(skillEsMdPath, 'utf-8');
+      bodyEs = getBody(rawEs);
+    }
 
     // Generate ZIP
     const zipPath = path.join(DOWNLOADS_DIR, `${skillName}.zip`);
@@ -156,6 +163,7 @@ async function main() {
       zipSize,
       subdirs: getSubdirs(skillDir),
       body,
+      bodyEs,
       downloadUrl: `/downloads/${skillName}.zip`,
       image: fs.existsSync(path.join(ROOT, 'public', 'images', 'skills', `${skillName}.png`))
         ? `/images/skills/${skillName}.png`
