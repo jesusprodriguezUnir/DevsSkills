@@ -1,8 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import SkillCard from '../components/SkillCard.astro';
-import fs from 'node:fs';
-import path from 'node:path';
+import Layout from "../layouts/Layout.astro";
+import SkillCard from "../components/SkillCard.astro";
+import fs from "node:fs";
+import path from "node:path";
 
 interface Skill {
   id: string;
@@ -22,11 +22,11 @@ interface Skill {
 }
 
 // Read the generated manifest
-const manifestPath = path.join(process.cwd(), 'src/data/skills-manifest.json');
-const skills: Skill[] = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+const manifestPath = path.join(process.cwd(), "src/data/skills-manifest.json");
+const skills: Skill[] = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
 
 // Resolve download URLs with base path (for GitHub Pages subpath deployment)
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 skills.forEach((s) => {
   s.downloadUrl = `${base}${s.downloadUrl}`;
   if (s.image) {
@@ -49,7 +49,9 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
       </div>
 
       <h1 class="hero-title">
-        <span class="title-line">Dev</span><span class="title-accent">Skills</span>
+        <span class="title-line">Dev</span><span class="title-accent"
+          >Skills</span
+        >
         <span class="title-line-2">Hub</span>
       </h1>
 
@@ -80,7 +82,20 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
     <section class="toolbar fade-in-up" style="animation-delay: 200ms">
       <div class="toolbar-top">
         <div class="search-wrapper glass">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="search-icon"
+            ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
+            ></path></svg
+          >
           <input
             type="text"
             id="skill-search"
@@ -90,10 +105,44 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
           />
           <kbd class="search-kbd">ESC</kbd>
         </div>
-        
-        <button id="theme-toggle" class="theme-btn glass" aria-label="Cambiar tema">
-          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+
+        <button
+          id="theme-toggle"
+          class="theme-btn glass"
+          aria-label="Cambiar tema"
+        >
+          <svg
+            id="moon-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="display: none;"
+            ><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg
+          >
+          <svg
+            id="sun-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="display: none;"
+            ><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"
+            ></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"
+            ></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"
+            ></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"
+            ></path><path d="m19.07 4.93-1.41 1.41"></path></svg
+          >
         </button>
       </div>
 
@@ -102,15 +151,17 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
           Todas
           <span class="filter-count">{skills.length}</span>
         </button>
-        {categories.map((cat) => {
-          const count = skills.filter((s) => s.category === cat).length;
-          return (
-            <button class="filter-btn" data-filter={cat}>
-              {cat}
-              <span class="filter-count">{count}</span>
-            </button>
-          );
-        })}
+        {
+          categories.map((cat) => {
+            const count = skills.filter((s) => s.category === cat).length;
+            return (
+              <button class="filter-btn" data-filter={cat}>
+                {cat}
+                <span class="filter-count">{count}</span>
+              </button>
+            );
+          })
+        }
       </div>
     </section>
 
@@ -118,28 +169,35 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
     <section class="skills-section">
       <div class="grid-header">
         <h2>Skills Disponibles</h2>
-        <span id="visible-count" class="visible-count" aria-live="polite" aria-atomic="true">{skills.length} de {skills.length}</span>
+        <span
+          id="visible-count"
+          class="visible-count"
+          aria-live="polite"
+          aria-atomic="true">{skills.length} de {skills.length}</span
+        >
       </div>
 
       <div class="skills-grid" id="skills-grid">
-        {skills.map((skill, idx) => (
-          <SkillCard
-            id={skill.id}
-            name={skill.name}
-            description={skill.description}
-            category={skill.category}
-            license={skill.license}
-            fileCount={skill.fileCount}
-            rawSize={skill.rawSize}
-            zipSize={skill.zipSize}
-            subdirs={skill.subdirs}
-            body={skill.body}
-            bodyEs={skill.bodyEs}
-            downloadUrl={skill.downloadUrl}
-            image={skill.image}
-            index={idx}
-          />
-        ))}
+        {
+          skills.map((skill, idx) => (
+            <SkillCard
+              id={skill.id}
+              name={skill.name}
+              description={skill.description}
+              category={skill.category}
+              license={skill.license}
+              fileCount={skill.fileCount}
+              rawSize={skill.rawSize}
+              zipSize={skill.zipSize}
+              subdirs={skill.subdirs}
+              body={skill.body}
+              bodyEs={skill.bodyEs}
+              downloadUrl={skill.downloadUrl}
+              image={skill.image}
+              index={idx}
+            />
+          ))
+        }
       </div>
 
       <div id="empty-state" class="empty-state" style="display: none;">
@@ -149,37 +207,171 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
       </div>
     </section>
 
+    <!-- ─── Author Section ─── -->
+    <section class="author-section fade-in-up" style="animation-delay: 300ms">
+      <div class="author-card glass">
+        <div class="author-avatar">
+          <span>JP</span>
+        </div>
+        <div class="author-info">
+          <h2 class="author-name">Jesús P.</h2>
+          <p class="author-role">Líder Técnico .NET Core @ UNIR</p>
+        </div>
+        <div class="author-socials">
+          <a href="https://github.com/jesusprodriguezUnir" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.03c3.15-.38 6.5-1.4 6.5-7.17A5.1 5.1 0 0 0 19 5a4.7 4.7 0 0 0-.5-3.5s-1-.3-3.2 1.2a11.5 11.5 0 0 0-6 0C7.1 1.2 6 1.5 6 1.5A4.7 4.7 0 0 0 5.5 5 5.1 5.1 0 0 0 4 8.8c0 5.76 3.35 6.79 6.5 7.17A4.8 4.8 0 0 0 9 19v3"></path></svg>
+          </a>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+          </a>
+          <a href="https://jesusprodriguezunir.github.io/blogprogramacion/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="DevIA Blog">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- ─── Resources Footer ─── -->
     <footer class="resources-footer fade-in-up" style="animation-delay: 400ms">
       <div class="resources-header">
         <h2 class="resources-title">Encuentra más skills</h2>
-        <p class="resources-subtitle">Catálogos y repositorios externos de la comunidad</p>
+        <p class="resources-subtitle">
+          Catálogos y repositorios externos de la comunidad
+        </p>
       </div>
       <div class="resources-grid">
-        <a href="https://www.aitmpl.com/" target="_blank" rel="noopener noreferrer" class="resource-card glass">
+        <a
+          href="https://www.aitmpl.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="resource-card glass"
+        >
+          <svg
+            class="resource-icon"
+            style="color: #6366f1;"
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><line
+              x1="3"
+              y1="9"
+              x2="21"
+              y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg
+          >
           <div class="resource-card-content">
             <span class="resource-card-name">aitmpl.com</span>
-            <span class="resource-card-desc">Plantillas y prompts para agentes de IA listos para usar</span>
+            <span class="resource-card-desc"
+              >Plantillas y prompts para agentes de IA listos para usar</span
+            >
           </div>
-          <svg class="resource-card-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          <svg
+            class="resource-card-arrow"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
+          >
         </a>
-        <a href="https://awesomeclaude.ai/" target="_blank" rel="noopener noreferrer" class="resource-card glass">
+        <a
+          href="https://awesomeclaude.ai/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="resource-card glass"
+        >
+          <svg
+            class="resource-icon"
+            style="color: #d946ef;"
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="m3 11 18-5v12L3 14v-3z"></path><path
+              d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg
+          >
           <div class="resource-card-content">
             <span class="resource-card-name">awesomeclaude.ai</span>
-            <span class="resource-card-desc">Lista curada de recursos, herramientas y skills para Claude</span>
+            <span class="resource-card-desc"
+              >Lista curada de recursos, herramientas y skills para Claude</span
+            >
           </div>
-          <svg class="resource-card-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          <svg
+            class="resource-card-arrow"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
+          >
         </a>
-        <a href="https://skills.sh/" target="_blank" rel="noopener noreferrer" class="resource-card glass">
+        <a
+          href="https://skills.sh/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="resource-card glass"
+        >
+          <svg
+            class="resource-icon"
+            style="color: #10b981;"
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><polyline points="4 17 10 11 4 5"></polyline><line
+              x1="12"
+              y1="19"
+              x2="20"
+              y2="19"></line></svg
+          >
           <div class="resource-card-content">
             <span class="resource-card-name">skills.sh</span>
-            <span class="resource-card-desc">Directorio de skills para agentes con Claude Code</span>
+            <span class="resource-card-desc"
+              >Directorio de skills para agentes con Claude Code</span
+            >
           </div>
-          <svg class="resource-card-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          <svg
+            class="resource-card-arrow"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
+          >
         </a>
       </div>
       <div class="footer-copy">
-        <span>© 2025 DevSkills Hub</span>
+        <span>© 2026 DevSkills Hub</span>
       </div>
     </footer>
   </main>
@@ -187,60 +379,68 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
 
 <script>
   function setupSearch() {
-    const searchInput = document.getElementById('skill-search') as HTMLInputElement;
-    const grid = document.getElementById('skills-grid')!;
-    const cards = grid.querySelectorAll<HTMLElement>('.skill-card');
-    const filterButtons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
-    const visibleCount = document.getElementById('visible-count')!;
-    const emptyState = document.getElementById('empty-state')!;
+    const searchInput = document.getElementById(
+      "skill-search",
+    ) as HTMLInputElement;
+    const grid = document.getElementById("skills-grid")!;
+    const cards = grid.querySelectorAll<HTMLElement>(".skill-card");
+    const filterButtons =
+      document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+    const visibleCount = document.getElementById("visible-count")!;
+    const emptyState = document.getElementById("empty-state")!;
     const total = cards.length;
 
-    let activeCategory = 'all';
+    let activeCategory = "all";
 
     function applyFilters() {
       const query = searchInput.value.toLowerCase().trim();
       let visible = 0;
 
-      cards.forEach(card => {
-        const title = card.querySelector('.card-title')?.textContent?.toLowerCase() || '';
-        const desc = card.querySelector('.card-description')?.textContent?.toLowerCase() || '';
-        const category = card.getAttribute('data-category') || '';
+      cards.forEach((card) => {
+        const title =
+          card.querySelector(".card-title")?.textContent?.toLowerCase() || "";
+        const desc =
+          card.querySelector(".card-description")?.textContent?.toLowerCase() ||
+          "";
+        const category = card.getAttribute("data-category") || "";
 
-        const matchesSearch = !query || title.includes(query) || desc.includes(query);
-        const matchesCategory = activeCategory === 'all' || category === activeCategory;
+        const matchesSearch =
+          !query || title.includes(query) || desc.includes(query);
+        const matchesCategory =
+          activeCategory === "all" || category === activeCategory;
         const show = matchesSearch && matchesCategory;
 
-        card.style.display = show ? '' : 'none';
+        card.style.display = show ? "" : "none";
         if (show) visible++;
       });
 
       visibleCount.textContent = `${visible} de ${total}`;
-      emptyState.style.display = visible === 0 ? '' : 'none';
-      grid.style.display = visible === 0 ? 'none' : '';
+      emptyState.style.display = visible === 0 ? "" : "none";
+      grid.style.display = visible === 0 ? "none" : "";
     }
 
-    searchInput.addEventListener('input', applyFilters);
+    searchInput.addEventListener("input", applyFilters);
 
-    searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        searchInput.value = '';
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        searchInput.value = "";
         searchInput.blur();
         applyFilters();
       }
     });
 
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeCategory = btn.getAttribute('data-filter') || 'all';
+    filterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeCategory = btn.getAttribute("data-filter") || "all";
         applyFilters();
       });
     });
 
     // Keyboard shortcut: / to focus search
-    document.addEventListener('keydown', (e) => {
-      if (e.key === '/' && document.activeElement !== searchInput) {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "/" && document.activeElement !== searchInput) {
         e.preventDefault();
         searchInput.focus();
       }
@@ -248,38 +448,40 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
 
     // Theme Toggle Logic
     const themeBtn = document.getElementById("theme-toggle");
-    
+
     function updateThemeIcon(theme) {
-      const sun = document.getElementById('sun-icon');
-      const moon = document.getElementById('moon-icon');
+      const sun = document.getElementById("sun-icon");
+      const moon = document.getElementById("moon-icon");
       if (sun && moon) {
-         if (theme === 'light') {
-           sun.style.display = 'none';
-           moon.style.display = 'block';
-         } else {
-           sun.style.display = 'block';
-           moon.style.display = 'none';
-         }
+        if (theme === "light") {
+          sun.style.display = "none";
+          moon.style.display = "block";
+        } else {
+          sun.style.display = "block";
+          moon.style.display = "none";
+        }
       }
     }
 
     if (themeBtn) {
       themeBtn.addEventListener("click", () => {
         const element = document.documentElement;
-        const currentTheme = element.getAttribute('data-theme') || 'dark';
-        const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
-        
-        element.setAttribute('data-theme', targetTheme);
-        localStorage.setItem('theme', targetTheme);
+        const currentTheme = element.getAttribute("data-theme") || "dark";
+        const targetTheme = currentTheme === "light" ? "dark" : "light";
+
+        element.setAttribute("data-theme", targetTheme);
+        localStorage.setItem("theme", targetTheme);
         updateThemeIcon(targetTheme);
       });
       // Set initial icon
-      updateThemeIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+      updateThemeIcon(
+        document.documentElement.getAttribute("data-theme") || "dark",
+      );
     }
   }
 
   setupSearch();
-  document.addEventListener('astro:after-swap', setupSearch);
+  document.addEventListener("astro:after-swap", setupSearch);
 </script>
 
 <style>
@@ -312,8 +514,15 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
   }
 
   @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.8);
+    }
   }
 
   .hero-title {
@@ -327,7 +536,12 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
   }
 
   .title-accent {
-    background: linear-gradient(135deg, var(--accent), #c084fc, var(--accent-bright));
+    background: linear-gradient(
+      135deg,
+      var(--accent),
+      #c084fc,
+      var(--accent-bright)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -366,7 +580,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
   }
 
   .stat-value {
-    font-family: 'Outfit', sans-serif;
+    font-family: "Outfit", sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -426,7 +640,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
     border: none;
     color: var(--text-primary);
     font-size: 0.95rem;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     outline: none;
   }
 
@@ -435,7 +649,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
   }
 
   .search-kbd {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: "JetBrains Mono", monospace;
     font-size: 0.65rem;
     background: rgba(255, 255, 255, 0.06);
     color: var(--text-tertiary);
@@ -481,7 +695,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
     color: var(--text-secondary);
     font-size: 0.8rem;
     font-weight: 500;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     cursor: pointer;
     transition: all var(--transition-fast);
   }
@@ -626,7 +840,16 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
     padding: 1.1rem 1.25rem;
     border-radius: var(--radius-md);
     text-decoration: none;
-    transition: border-color var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast),
+      background var(--transition-fast);
+  }
+
+  .resource-icon {
+    flex-shrink: 0;
+    opacity: 0.85;
+    transition: transform var(--transition-fast);
   }
 
   .resource-card:hover {
@@ -648,7 +871,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
   }
 
   .resource-card-name {
-    font-family: 'Outfit', sans-serif;
+    font-family: "Outfit", sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--accent-bright);
@@ -663,7 +886,9 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
   .resource-card-arrow {
     flex-shrink: 0;
     color: var(--text-tertiary);
-    transition: transform var(--transition-fast), color var(--transition-fast);
+    transition:
+      transform var(--transition-fast),
+      color var(--transition-fast);
   }
 
   .footer-copy {
@@ -676,6 +901,101 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
   @media (max-width: 768px) {
     .resources-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* ─── Author Section ─── */
+  .author-section {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .author-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 2.5rem;
+    border-radius: var(--radius-xl);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+  }
+
+  .author-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: "Outfit", sans-serif;
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.3);
+  }
+
+  .author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .author-name {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    font-family: "Outfit", sans-serif;
+    margin: 0;
+  }
+
+  .author-role {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .author-socials {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: 1rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border-color);
+  }
+
+  .social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+  }
+
+  .social-icon:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(129, 140, 248, 0.4);
+  }
+
+  @media (max-width: 640px) {
+    .author-card {
+      flex-direction: column;
+      text-align: center;
+    }
+    .author-socials {
+      margin-left: 0;
+      padding-left: 0;
+      border-left: none;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      justify-content: center;
+      width: 100%;
     }
   }
 </style>
