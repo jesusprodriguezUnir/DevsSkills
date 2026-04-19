@@ -157,6 +157,9 @@ async function main() {
       subdirs: getSubdirs(skillDir),
       body,
       downloadUrl: `/downloads/${skillName}.zip`,
+      image: fs.existsSync(path.join(ROOT, 'public', 'images', 'skills', `${skillName}.png`))
+        ? `/images/skills/${skillName}.png`
+        : null,
     };
 
     manifest.push(entry);

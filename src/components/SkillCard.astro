@@ -11,10 +11,11 @@ interface Props {
   subdirs: string[];
   body: string;
   downloadUrl: string;
+  image?: string | null;
   index: number;
 }
 
-const { id, name, description, category, license, fileCount, rawSize, zipSize, subdirs, body, downloadUrl, index } = Astro.props;
+const { id, name, description, category, license, fileCount, rawSize, zipSize, subdirs, body, downloadUrl, image, index } = Astro.props;
 
 const categoryConfig: Record<string, { icon: string; color: string; bg: string }> = {
   'OpenUP': { icon: '🔄', color: '#818cf8', bg: 'rgba(129, 140, 248, 0.1)' },
@@ -36,6 +37,12 @@ const delay = Math.min(index * 50, 600);
 ---
 
 <div class="skill-card glass" style={`animation-delay: ${delay}ms`} data-category={category}>
+  {image && (
+    <div class="card-image-container">
+      <img src={image} alt={`Imagen de ${name}`} class="card-image" loading="lazy" />
+      <div class="image-overlay"></div>
+    </div>
+  )}
   <div class="card-top">
     <div class="card-header">
       <span class="category-pill" style={`color: ${cat.color}; background: ${cat.bg}; border-color: ${cat.color}20`}>
@@ -151,6 +158,36 @@ const delay = Math.min(index * 50, 600);
 
 <style>
   /* ─── Card ─── */
+  .card-image-container {
+    margin: -1.75rem -1.75rem 1.25rem -1.75rem;
+    height: 160px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-smooth), filter var(--transition-smooth);
+    opacity: 0.9;
+    filter: saturate(0.8) contrast(1.1);
+  }
+
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(14, 14, 20, 0.9));
+  }
+
+  .skill-card:hover .card-image {
+    transform: scale(1.05);
+    opacity: 1;
+    filter: saturate(1) contrast(1.2);
+  }
+
   .skill-card {
     display: flex;
     flex-direction: column;

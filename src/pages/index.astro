@@ -17,6 +17,7 @@ interface Skill {
   subdirs: string[];
   body: string;
   downloadUrl: string;
+  image: string | null;
 }
 
 // Read the generated manifest
@@ -27,6 +28,9 @@ const skills: Skill[] = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 skills.forEach((s) => {
   s.downloadUrl = `${base}${s.downloadUrl}`;
+  if (s.image) {
+    s.image = `${base}${s.image}`;
+  }
 });
 
 // Compute stats
@@ -123,6 +127,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
             subdirs={skill.subdirs}
             body={skill.body}
             downloadUrl={skill.downloadUrl}
+            image={skill.image}
             index={idx}
           />
         ))}
