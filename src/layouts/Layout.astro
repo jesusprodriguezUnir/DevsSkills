@@ -115,7 +115,7 @@ const ogImageURL = ogImage && Astro.site
   }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'JetBrains Mono', -apple-system, BlinkMacSystemFont, monospace;
     background-color: var(--bg-color);
     color: var(--text-primary);
     min-height: 100vh;
@@ -126,7 +126,7 @@ const ogImageURL = ogImage && Astro.site
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'JetBrains Mono', monospace;
     letter-spacing: -0.03em;
     line-height: 1.2;
   }
@@ -140,6 +140,7 @@ const ogImageURL = ogImage && Astro.site
     height: 100%;
     z-index: -1;
     overflow: hidden;
+    display: none;
   }
 
   .gradient-orb {
@@ -148,52 +149,13 @@ const ogImageURL = ogImage && Astro.site
     filter: blur(100px);
     opacity: 0.4;
     animation: float 20s ease-in-out infinite;
-  }
-
-  .orb-1 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.3), transparent 70%);
-    top: -200px;
-    left: -100px;
-    animation-delay: 0s;
-  }
-
-  .orb-2 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%);
-    top: 50%;
-    right: -150px;
-    animation-delay: -7s;
-    animation-duration: 25s;
-  }
-
-  .orb-3 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(52, 211, 153, 0.15), transparent 70%);
-    bottom: -100px;
-    left: 30%;
-    animation-delay: -14s;
-    animation-duration: 30s;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -30px) scale(1.05); }
-    66% { transform: translate(-20px, 20px) scale(0.95); }
+    display: none;
   }
 
   .grid-overlay {
     position: absolute;
     inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent);
-    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent);
+    display: none;
   }
 
   html[data-theme="light"] {
@@ -228,6 +190,12 @@ const ogImageURL = ogImage && Astro.site
     max-width: 1300px;
     margin: 0 auto;
     padding: 3rem 2rem 6rem;
+  }
+
+  main.terminal-main {
+    max-width: none;
+    padding: 0;
+    margin: 0;
   }
 
   /* ─── Glass Surfaces ─── */

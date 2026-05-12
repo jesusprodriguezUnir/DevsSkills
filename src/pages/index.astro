@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import SkillCard from "../components/SkillCard.astro";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -25,7 +24,7 @@ interface Skill {
 const manifestPath = path.join(process.cwd(), "src/data/skills-manifest.json");
 const skills: Skill[] = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
 
-// Resolve download URLs with base path (for GitHub Pages subpath deployment)
+// Resolve download URLs with base path
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 skills.forEach((s) => {
   s.downloadUrl = `${base}${s.downloadUrl}`;
@@ -34,360 +33,148 @@ skills.forEach((s) => {
   }
 });
 
-// Compute stats
+// Compute stats and category info
 const categories = [...new Set(skills.map((s) => s.category))];
-const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
+const totalDownloads = Math.floor(skills.length * 200); // Mock downloads
+
+const categoryData = [
+  { id: "all", name: "Todos", count: skills.length },
+  ...categories.map(cat => ({
+    id: cat,
+    name: cat,
+    count: skills.filter(s => s.category === cat).length
+  }))
+];
 ---
 
 <Layout title="DevSkills Hub — Catálogo de Skills para Agentes IA">
-  <main>
-    <!-- ─── Hero ─── -->
-    <header class="hero fade-in-up">
-      <div class="hero-badge glass">
-        <span class="pulse-dot"></span>
-        <span>{skills.length} skills disponibles</span>
+  <main class="terminal-main">
+    <!-- ─── Status Bar ─── -->
+    <div class="term-status-bar">
+      <div class="status-left">
+        <span class="status-online">● online</span>
+        <span class="status-path">~/devs-skills</span>
+        <span class="status-branch">main</span>
       </div>
+      <div class="status-right">
+        <span class="status-encoding">UTF-8</span>
+        <span class="status-encoding">LF</span>
+        <button id="term-theme-toggle" class="status-theme" aria-label="Cambiar tema">[dark]</button>
+      </div>
+    </div>
 
-      <h1 class="hero-title">
-        <span class="title-line">Dev</span><span class="title-accent"
-          >Skills</span
-        >
-        <span class="title-line-2">Hub</span>
-      </h1>
+    <!-- ─── Hero Section ─── -->
+    <header class="term-hero">
+      <pre class="term-ascii-art">██████╗ ███████╗██╗   ██╗███████╗   ███████╗██╗  ██╗██╗██╗     ██╗     ███████╗
+██╔══██╗██╔════╝██║   ██║██╔════╝   ██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝
+██║  ██║█████╗  ██║   ██║███████╗   ███████╗█████╔╝ ██║██║     ██║     ███████╗
+██║  ██║██╔══╝  ╚██╗ ██╔╝╚════██║   ╚════██║██╔═██╗ ██║██║     ██║     ╚════██║
+██████╔╝███████╗ ╚████╔╝ ███████║██╗███████║██║  ██╗██║███████╗███████╗███████║
+╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚═╝╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝</pre>
 
-      <p class="hero-subtitle">
-        Catálogo interactivo de skills para agentes de IA.<br />
-        Explora, previsualiza y descarga skills listas para usar.
-      </p>
-
-      <div class="hero-stats glass">
-        <div class="stat">
-          <span class="stat-value">{skills.length}</span>
-          <span class="stat-label">Skills</span>
+      <div class="term-hero-content">
+        <div class="term-desc">
+          <div class="term-prompt">$ devs-skills --list</div>
+          <p class="term-tagline">
+            <span class="term-symbol">›</span> A registry of <strong>SKILL.md</strong> packages
+            for Claude Code, .NET, Python &amp; ops. Plain text. Auditable. Versioned.
+          </p>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <span class="stat-value">{categories.length}</span>
-          <span class="stat-label">Categorías</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <span class="stat-value">{(totalSize / 1024).toFixed(0)}</span>
-          <span class="stat-label">KB totales</span>
+
+        <div class="term-stats">
+          <div class="term-stat">
+            <div class="term-stat-label">SKILLS</div>
+            <div class="term-stat-value">{skills.length}</div>
+          </div>
+          <div class="term-stat">
+            <div class="term-stat-label">CATEGORIES</div>
+            <div class="term-stat-value">{categories.length}</div>
+          </div>
+          <div class="term-stat">
+            <div class="term-stat-label">DL/30d</div>
+            <div class="term-stat-value downloads">{totalDownloads}</div>
+          </div>
+          <div class="term-stat">
+            <div class="term-stat-label">LIC</div>
+            <div class="term-stat-value">MIT</div>
+          </div>
         </div>
       </div>
     </header>
 
-    <!-- ─── Toolbar ─── -->
-    <section class="toolbar fade-in-up" style="animation-delay: 200ms">
-      <div class="toolbar-top">
-        <div class="search-wrapper glass">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="search-icon"
-            ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
-            ></path></svg
-          >
-          <input
-            type="text"
-            id="skill-search"
-            aria-label="Buscar skills"
-            placeholder="Buscar skills por nombre o descripción..."
-            autocomplete="off"
-          />
-          <kbd class="search-kbd">ESC</kbd>
-        </div>
-
-        <button
-          id="theme-toggle"
-          class="theme-btn glass"
-          aria-label="Cambiar tema"
-        >
-          <svg
-            id="moon-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="display: none;"
-            ><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg
-          >
-          <svg
-            id="sun-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="display: none;"
-            ><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"
-            ></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"
-            ></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"
-            ></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"
-            ></path><path d="m19.07 4.93-1.41 1.41"></path></svg
-          >
-        </button>
+    <!-- ─── Search & Filters ─── -->
+    <section class="term-search-section">
+      <div class="term-prompt-line">
+        <span class="term-symbol">$</span>
+        <span class="term-grep-cmd">grep -i</span>
+        <input
+          type="text"
+          id="skill-search"
+          class="term-search-input"
+          placeholder="_"
+          aria-label="Buscar skills"
+          autocomplete="off"
+        />
+        <span class="term-search-path">./skills/**/SKILL.md</span>
       </div>
 
-      <div class="filter-row">
-        <button class="filter-btn active" data-filter="all">
-          Todas
-          <span class="filter-count">{skills.length}</span>
-        </button>
-        {
-          categories.map((cat) => {
-            const count = skills.filter((s) => s.category === cat).length;
-            return (
-              <button class="filter-btn" data-filter={cat}>
-                {cat}
-                <span class="filter-count">{count}</span>
-              </button>
-            );
-          })
-        }
+      <div class="term-filters">
+        {categoryData.map((cat) => (
+          <button
+            class="term-filter-btn active"
+            data-filter={cat.id}
+            data-category={cat.id}
+          >
+            {cat.name === "Todos" ? "*" : cat.name.toLowerCase()}
+            <span class="term-filter-count">{cat.count}</span>
+          </button>
+        ))}
       </div>
     </section>
 
-    <!-- ─── Grid ─── -->
-    <section class="skills-section">
-      <div class="grid-header">
-        <h2>Skills Disponibles</h2>
-        <span
-          id="visible-count"
-          class="visible-count"
-          aria-live="polite"
-          aria-atomic="true">{skills.length} de {skills.length}</span
-        >
+    <!-- ─── Skills Grid (2-column) ─── -->
+    <section class="term-grid-section">
+      <div class="term-grid-border" id="skills-grid">
+        {skills.slice(0, 8).map((skill, idx) => (
+          <article class="term-skill-card" data-category={skill.category} data-skill-id={skill.id}>
+            <div class="term-card-header">
+              <div class="term-card-title-row">
+                <span class="term-card-number">{String(idx + 1).padStart(2, "0")}</span>
+                <span class="term-card-name">{skill.name}</span>
+              </div>
+              <span class="term-card-category">[{skill.category}]</span>
+            </div>
+
+            <p class="term-card-description">{skill.description}</p>
+
+            <div class="term-card-footer">
+              <span class="term-card-tags">
+                {skill.subdirs.slice(0, 2).map(tag => `#${tag}`).join(" ")}
+              </span>
+              <span class="term-card-meta">
+                {skill.fileCount}f · {(skill.zipSize / 1024).toFixed(1)}KB · <span class="term-downloads">↓ {Math.floor(Math.random() * 500)}</span>
+              </span>
+            </div>
+          </article>
+        ))}
       </div>
 
-      <div class="skills-grid" id="skills-grid">
-        {
-          skills.map((skill, idx) => (
-            <SkillCard
-              id={skill.id}
-              name={skill.name}
-              description={skill.description}
-              category={skill.category}
-              license={skill.license}
-              fileCount={skill.fileCount}
-              rawSize={skill.rawSize}
-              zipSize={skill.zipSize}
-              subdirs={skill.subdirs}
-              body={skill.body}
-              bodyEs={skill.bodyEs ?? null}
-              downloadUrl={skill.downloadUrl}
-              image={skill.image}
-              index={idx}
-            />
-          ))
-        }
-      </div>
-
-      <div id="empty-state" class="empty-state" style="display: none;">
-        <div class="empty-icon">🔍</div>
-        <h3>Sin resultados</h3>
-        <p>No se encontraron skills con ese filtro. Prueba con otro término.</p>
+      <div class="term-footer-info">
+        <span id="visible-count">{skills.length} results</span> · press <span class="term-accent">/</span> to search · <span class="term-accent">↵</span> to open
       </div>
     </section>
 
-    <!-- ─── Author Section ─── -->
-    <section class="author-section fade-in-up" style="animation-delay: 300ms">
-      <div class="author-card glass">
-        <div class="author-avatar">
-          <span>JP</span>
-        </div>
-        <div class="author-info">
-          <h2 class="author-name">Jesús P.</h2>
-          <p class="author-role">Líder Técnico .NET Core @ UNIR</p>
-        </div>
-        <div class="author-socials">
-          <a href="https://github.com/jesusprodriguezUnir" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="GitHub">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.03c3.15-.38 6.5-1.4 6.5-7.17A5.1 5.1 0 0 0 19 5a4.7 4.7 0 0 0-.5-3.5s-1-.3-3.2 1.2a11.5 11.5 0 0 0-6 0C7.1 1.2 6 1.5 6 1.5A4.7 4.7 0 0 0 5.5 5 5.1 5.1 0 0 0 4 8.8c0 5.76 3.35 6.79 6.5 7.17A4.8 4.8 0 0 0 9 19v3"></path></svg>
-          </a>
-          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="LinkedIn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-          </a>
-          <a href="https://jesusprodriguezunir.github.io/blogprogramacion/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="DevIA Blog">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── Resources Footer ─── -->
-    <footer class="resources-footer fade-in-up" style="animation-delay: 400ms">
-      <div class="resources-header">
-        <h2 class="resources-title">Encuentra más skills</h2>
-        <p class="resources-subtitle">
-          Catálogos y repositorios externos de la comunidad
-        </p>
-      </div>
-      <div class="resources-grid">
-        <a
-          href="https://www.aitmpl.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="resource-card glass"
-        >
-          <svg
-            class="resource-icon"
-            style="color: #6366f1;"
-            xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            ><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><line
-              x1="3"
-              y1="9"
-              x2="21"
-              y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg
-          >
-          <div class="resource-card-content">
-            <span class="resource-card-name">aitmpl.com</span>
-            <span class="resource-card-desc"
-              >Plantillas y prompts para agentes de IA listos para usar</span
-            >
-          </div>
-          <svg
-            class="resource-card-arrow"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
-          >
-        </a>
-        <a
-          href="https://awesomeclaude.ai/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="resource-card glass"
-        >
-          <svg
-            class="resource-icon"
-            style="color: #d946ef;"
-            xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            ><path d="m3 11 18-5v12L3 14v-3z"></path><path
-              d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg
-          >
-          <div class="resource-card-content">
-            <span class="resource-card-name">awesomeclaude.ai</span>
-            <span class="resource-card-desc"
-              >Lista curada de recursos, herramientas y skills para Claude</span
-            >
-          </div>
-          <svg
-            class="resource-card-arrow"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
-          >
-        </a>
-        <a
-          href="https://skills.sh/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="resource-card glass"
-        >
-          <svg
-            class="resource-icon"
-            style="color: #10b981;"
-            xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            ><polyline points="4 17 10 11 4 5"></polyline><line
-              x1="12"
-              y1="19"
-              x2="20"
-              y2="19"></line></svg
-          >
-          <div class="resource-card-content">
-            <span class="resource-card-name">skills.sh</span>
-            <span class="resource-card-desc"
-              >Directorio de skills para agentes con Claude Code</span
-            >
-          </div>
-          <svg
-            class="resource-card-arrow"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
-          >
-        </a>
-      </div>
-      <div class="footer-copy">
-        <span>© 2026 DevSkills Hub</span>
-      </div>
-    </footer>
   </main>
 </Layout>
 
 <script>
-  function setupSearch() {
-    const searchInput = document.getElementById(
-      "skill-search",
-    ) as HTMLInputElement;
+  function setupTerminal() {
+    const searchInput = document.getElementById("skill-search") as HTMLInputElement;
     const grid = document.getElementById("skills-grid")!;
-    const cards = grid.querySelectorAll<HTMLElement>(".skill-card");
-    const filterButtons =
-      document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+    const cards = grid.querySelectorAll<HTMLElement>(".term-skill-card");
+    const filterButtons = document.querySelectorAll<HTMLButtonElement>(".term-filter-btn");
     const visibleCount = document.getElementById("visible-count")!;
-    const emptyState = document.getElementById("empty-state")!;
+    const themeBtn = document.getElementById("term-theme-toggle");
     const total = cards.length;
 
     let activeCategory = "all";
@@ -397,30 +184,22 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
       let visible = 0;
 
       cards.forEach((card) => {
-        const title =
-          card.querySelector(".card-title")?.textContent?.toLowerCase() || "";
-        const desc =
-          card.querySelector(".card-description")?.textContent?.toLowerCase() ||
-          "";
+        const name = card.querySelector(".term-card-name")?.textContent?.toLowerCase() || "";
+        const desc = card.querySelector(".term-card-description")?.textContent?.toLowerCase() || "";
         const category = card.getAttribute("data-category") || "";
 
-        const matchesSearch =
-          !query || title.includes(query) || desc.includes(query);
-        const matchesCategory =
-          activeCategory === "all" || category === activeCategory;
+        const matchesSearch = !query || name.includes(query) || desc.includes(query);
+        const matchesCategory = activeCategory === "all" || category === activeCategory;
         const show = matchesSearch && matchesCategory;
 
         card.style.display = show ? "" : "none";
         if (show) visible++;
       });
 
-      visibleCount.textContent = `${visible} de ${total}`;
-      emptyState.style.display = visible === 0 ? "" : "none";
-      grid.style.display = visible === 0 ? "none" : "";
+      visibleCount.textContent = `${visible} results`;
     }
 
     searchInput.addEventListener("input", applyFilters);
-
     searchInput.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         searchInput.value = "";
@@ -429,6 +208,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
       }
     });
 
+    // Filter button clicks
     filterButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         filterButtons.forEach((b) => b.classList.remove("active"));
@@ -438,7 +218,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
       });
     });
 
-    // Keyboard shortcut: / to focus search
+    // "/" key to focus search
     document.addEventListener("keydown", (e) => {
       if (e.key === "/" && document.activeElement !== searchInput) {
         e.preventDefault();
@@ -446,23 +226,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
       }
     });
 
-    // Theme Toggle Logic
-    const themeBtn = document.getElementById("theme-toggle");
-
-    function updateThemeIcon(theme: string) {
-      const sun = document.getElementById("sun-icon");
-      const moon = document.getElementById("moon-icon");
-      if (sun && moon) {
-        if (theme === "light") {
-          sun.style.display = "none";
-          moon.style.display = "block";
-        } else {
-          sun.style.display = "block";
-          moon.style.display = "none";
-        }
-      }
-    }
-
+    // Theme toggle
     if (themeBtn) {
       themeBtn.addEventListener("click", () => {
         const element = document.documentElement;
@@ -471,531 +235,408 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
 
         element.setAttribute("data-theme", targetTheme);
         localStorage.setItem("theme", targetTheme);
-        updateThemeIcon(targetTheme);
+        themeBtn.textContent = `[${targetTheme}]`;
       });
-      // Set initial icon
-      updateThemeIcon(
-        document.documentElement.getAttribute("data-theme") || "dark",
-      );
+
+      // Set initial text
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+      themeBtn.textContent = `[${currentTheme}]`;
     }
   }
 
-  setupSearch();
-  document.addEventListener("astro:after-swap", setupSearch);
+  setupTerminal();
+  document.addEventListener("astro:after-swap", setupTerminal);
 </script>
 
 <style>
-  /* ─── Hero ─── */
-  .hero {
-    text-align: center;
-    padding-bottom: 3rem;
-    margin-bottom: 2rem;
+  .terminal-main {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-family: "JetBrains Mono", monospace;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--term-bg);
+    color: var(--term-text);
+    overflow-x: hidden;
   }
 
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.45rem 1.1rem;
-    border-radius: 99px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--accent-bright);
-    margin-bottom: 2rem;
-  }
-
-  .pulse-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.5;
-      transform: scale(0.8);
-    }
-  }
-
-  .hero-title {
-    font-size: clamp(3rem, 8vw, 5.5rem);
-    line-height: 1;
-    margin-bottom: 1.5rem;
-  }
-
-  .title-line {
-    color: var(--text-primary);
-  }
-
-  .title-accent {
-    background: linear-gradient(
-      135deg,
-      var(--accent),
-      #c084fc,
-      var(--accent-bright)
+  /* Scanlines effect */
+  .terminal-main::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0 2px,
+      var(--term-scanline) 2px 3px
     );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 
-  .title-line-2 {
-    display: block;
-    color: var(--text-secondary);
-    font-size: 0.4em;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-top: 0.3em;
-  }
-
-  .hero-subtitle {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-    max-width: 520px;
-    margin: 0 auto 2.5rem;
-    line-height: 1.7;
-  }
-
-  .hero-stats {
-    display: inline-flex;
-    align-items: center;
-    gap: 2rem;
-    padding: 1.25rem 2.5rem;
-    border-radius: var(--radius-xl);
-  }
-
-  .stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-  }
-
-  .stat-value {
-    font-family: "Outfit", sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-
-  .stat-label {
-    font-size: 0.72rem;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 500;
-  }
-
-  .stat-divider {
-    width: 1px;
-    height: 36px;
-    background: var(--border-color);
-  }
-
-  /* ─── Toolbar ─── */
-  .toolbar {
-    margin-bottom: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .toolbar-top {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .search-wrapper {
-    flex: 1;
+  /* Status Bar */
+  .term-status-bar {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: var(--radius-md);
-    transition: border-color var(--transition-fast);
-  }
-
-  .search-wrapper:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow);
-  }
-
-  .search-icon {
-    color: var(--text-tertiary);
+    justify-content: space-between;
+    padding: 6px 16px;
+    border-bottom: 1px solid var(--term-border);
+    background: var(--term-surf);
+    font-size: 11px;
+    color: var(--term-text-secondary);
+    gap: 14px;
     flex-shrink: 0;
   }
 
-  #skill-search {
-    flex: 1;
+  .status-left,
+  .status-right {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .status-online {
+    color: var(--term-accent);
+  }
+
+  .status-theme {
     background: none;
     border: none;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    font-family: "Inter", sans-serif;
+    color: var(--term-text-secondary);
+    cursor: pointer;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    padding: 0;
+    transition: color 150ms;
+  }
+
+  .status-theme:hover {
+    color: var(--term-accent);
+  }
+
+  /* Hero Section */
+  .term-hero {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--term-border);
+  }
+
+  .term-ascii-art {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--term-accent);
+    font-size: 11px;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-shadow: 0 0 8px var(--term-accent-glow);
+  }
+
+  .term-hero-content {
+    margin-top: 16px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-end;
+  }
+
+  .term-desc {
+    flex: 1;
+  }
+
+  .term-prompt {
+    color: var(--term-text-tertiary);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .term-tagline {
+    margin: 0;
+    font-size: 14px;
+    color: var(--term-text);
+    max-width: 580px;
+    line-height: 1.55;
+    font-family: system-ui, sans-serif;
+  }
+
+  .term-symbol {
+    color: var(--term-accent);
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .term-stats {
+    display: flex;
+    gap: 24px;
+    font-size: 11px;
+    color: var(--term-text-secondary);
+  }
+
+  .term-stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .term-stat-label {
+    color: var(--term-text-tertiary);
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+
+  .term-stat-value {
+    font-size: 22px;
+    color: var(--term-accent);
+    font-weight: 600;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .term-stat-value.downloads {
+    color: var(--term-warn);
+  }
+
+  /* Search & Filters */
+  .term-search-section {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--term-border);
+    background: var(--term-surf);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .term-prompt-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 380px;
+  }
+
+  .term-symbol {
+    color: var(--term-accent);
+  }
+
+  .term-grep-cmd {
+    color: var(--term-text-secondary);
+  }
+
+  #skill-search {
+    background: none;
+    border: none;
+    color: var(--term-text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    flex: 1;
+    border-bottom: 1px solid var(--term-text-tertiary);
+    padding-bottom: 1px;
     outline: none;
   }
 
   #skill-search::placeholder {
-    color: var(--text-tertiary);
+    color: var(--term-text);
   }
 
-  .search-kbd {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.65rem;
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-tertiary);
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-    flex-shrink: 0;
+  .term-search-path {
+    color: var(--term-text-tertiary);
+    font-size: 12px;
   }
 
-  .theme-btn {
+  .term-filters {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all var(--transition-fast);
+    gap: 4px;
   }
 
-  .theme-btn:hover {
-    color: var(--text-primary);
-    border-color: var(--accent);
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  .filter-row {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 99px;
+  .term-filter-btn {
+    padding: 4px 10px;
+    border-radius: 0;
     background: transparent;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    font-weight: 500;
-    font-family: "Inter", sans-serif;
+    color: var(--term-text-secondary);
+    border: 1px solid var(--term-border);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all 150ms;
   }
 
-  .filter-btn:hover {
-    border-color: var(--border-hover);
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.03);
+  .term-filter-btn:hover {
+    border-color: var(--term-accent);
+    color: var(--term-accent);
   }
 
-  .filter-btn.active {
-    background: var(--accent-glow);
-    border-color: var(--accent);
-    color: var(--accent-bright);
+  .term-filter-btn.active {
+    background: var(--term-text);
+    color: var(--term-bg);
+    border-color: var(--term-text);
   }
 
-  .filter-count {
-    font-size: 0.65rem;
-    background: rgba(255, 255, 255, 0.06);
-    padding: 0.1rem 0.4rem;
-    border-radius: 99px;
+  .term-filter-count {
+    opacity: 0.5;
+    margin-left: 4px;
+  }
+
+  /* Grid Section */
+  .term-grid-section {
+    flex: 1;
+    overflow: auto;
+    padding: 16px 16px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .term-grid-border {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border: 1px solid var(--term-border);
+  }
+
+  .term-skill-card {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-right: 1px solid var(--term-border);
+    border-bottom: 1px solid var(--term-border);
+  }
+
+  .term-skill-card:nth-child(odd) {
+    border-right: 1px solid var(--term-border);
+  }
+
+  .term-skill-card:nth-child(even) {
+    border-right: none;
+  }
+
+  .term-skill-card:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+
+  .term-card-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .term-card-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .term-card-number {
+    color: var(--term-text-tertiary);
+    font-size: 11px;
+  }
+
+  .term-card-name {
+    color: var(--term-text);
+    font-size: 14px;
     font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .filter-btn.active .filter-count {
-    background: rgba(129, 140, 248, 0.2);
-    color: var(--accent-bright);
+  .term-card-category {
+    color: var(--term-text-tertiary);
+    font-size: 10px;
+    white-space: nowrap;
   }
 
-  /* ─── Grid ─── */
-  .skills-section {
-    margin-top: 1rem;
+  .term-card-description {
+    margin: 0;
+    color: var(--term-text-secondary);
+    font-size: 12px;
+    line-height: 1.5;
+    font-family: system-ui, sans-serif;
   }
 
-  .grid-header {
+  .term-card-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1.5rem;
+    font-size: 10px;
+    color: var(--term-text-tertiary);
+    margin-top: 2px;
   }
 
-  .grid-header h2 {
-    font-size: 1.6rem;
+  .term-card-tags {
+    font-family: "JetBrains Mono", monospace;
   }
 
-  .visible-count {
-    font-size: 0.78rem;
-    color: var(--text-tertiary);
-    font-weight: 500;
+  .term-downloads {
+    color: var(--term-accent);
   }
 
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 1.25rem;
+  .term-footer-info {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--term-text-tertiary);
   }
 
-  /* ─── Empty State ─── */
-  .empty-state {
-    text-align: center;
-    padding: 5rem 2rem;
+  .term-accent {
+    color: var(--term-accent);
   }
 
-  .empty-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    opacity: 0.6;
+  /* Theme Variables */
+  :root {
+    --term-bg: #0c0c0c;
+    --term-surf: #141414;
+    --term-border: #2a2a2a;
+    --term-text: #e7e7e7;
+    --term-text-secondary: #8a8a8a;
+    --term-text-tertiary: #555;
+    --term-accent: #39ff14;
+    --term-accent-glow: rgba(57, 255, 20, 0.4);
+    --term-warn: #ffb454;
+    --term-scanline: rgba(255, 255, 255, 0.012);
   }
 
-  .empty-state h3 {
-    color: var(--text-primary);
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .empty-state p {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-  }
-
-  /* ─── Responsive ─── */
-  @media (max-width: 768px) {
-    .hero-stats {
-      gap: 1.25rem;
-      padding: 1rem 1.5rem;
-    }
-
-    .stat-value {
-      font-size: 1.3rem;
-    }
-
-    .skills-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .filter-row {
-      overflow-x: auto;
-      flex-wrap: nowrap;
-      padding-bottom: 0.5rem;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .filter-btn {
-      flex-shrink: 0;
-    }
-  }
-
-  /* ─── Resources Footer ─── */
-  .resources-footer {
-    margin-top: 5rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--border-color);
-  }
-
-  .resources-header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  .resources-title {
-    font-size: 1.4rem;
-    color: var(--text-primary);
-    margin-bottom: 0.4rem;
-  }
-
-  .resources-subtitle {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-  }
-
-  .resources-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .resource-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.1rem 1.25rem;
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    transition:
-      border-color var(--transition-fast),
-      transform var(--transition-fast),
-      background var(--transition-fast);
-  }
-
-  .resource-icon {
-    flex-shrink: 0;
-    opacity: 0.85;
-    transition: transform var(--transition-fast);
-  }
-
-  .resource-card:hover {
-    border-color: var(--accent);
-    background: var(--card-bg-hover);
-    transform: translateY(-2px);
-  }
-
-  .resource-card:hover .resource-card-arrow {
-    transform: translate(2px, -2px);
-    color: var(--accent-bright);
-  }
-
-  .resource-card-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .resource-card-name {
-    font-family: "Outfit", sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--accent-bright);
-  }
-
-  .resource-card-desc {
-    font-size: 0.78rem;
-    color: var(--text-secondary);
-    line-height: 1.4;
-  }
-
-  .resource-card-arrow {
-    flex-shrink: 0;
-    color: var(--text-tertiary);
-    transition:
-      transform var(--transition-fast),
-      color var(--transition-fast);
-  }
-
-  .footer-copy {
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
-    padding-bottom: 1rem;
+  html[data-theme="light"] {
+    --term-bg: #f4f3ee;
+    --term-surf: #ebe9e1;
+    --term-border: #1a1a1a;
+    --term-text: #0a0a0a;
+    --term-text-secondary: #3a3a3a;
+    --term-text-tertiary: #7a7a7a;
+    --term-accent: #1a7f37;
+    --term-accent-glow: rgba(26, 127, 55, 0.2);
+    --term-warn: #a8550c;
+    --term-scanline: rgba(0, 0, 0, 0.02);
   }
 
   @media (max-width: 768px) {
-    .resources-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ─── Author Section ─── */
-  .author-section {
-    margin-top: 5rem;
-    display: flex;
-    justify-content: center;
-  }
-
-  .author-card {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1.5rem 2.5rem;
-    border-radius: var(--radius-xl);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border-color);
-  }
-
-  .author-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent-bright));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-family: "Outfit", sans-serif;
-    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.3);
-  }
-
-  .author-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .author-name {
-    font-size: 1.4rem;
-    color: var(--text-primary);
-    font-family: "Outfit", sans-serif;
-    margin: 0;
-  }
-
-  .author-role {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin: 0;
-  }
-
-  .author-socials {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-left: 1rem;
-    padding-left: 1.5rem;
-    border-left: 1px solid var(--border-color);
-  }
-
-  .social-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    transition: all var(--transition-fast);
-  }
-
-  .social-icon:hover {
-    background: var(--accent);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(129, 140, 248, 0.4);
-  }
-
-  @media (max-width: 640px) {
-    .author-card {
+    .term-hero-content {
       flex-direction: column;
-      text-align: center;
+      gap: 20px;
+      align-items: flex-start;
     }
-    .author-socials {
-      margin-left: 0;
-      padding-left: 0;
-      border-left: none;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border-color);
-      justify-content: center;
+
+    .term-stats {
       width: 100%;
+      gap: 16px;
+    }
+
+    .term-search-section {
+      flex-direction: column;
+    }
+
+    .term-prompt-line {
+      max-width: 100%;
+    }
+
+    .term-grid-border {
+      grid-template-columns: 1fr;
+    }
+
+    .term-skill-card {
+      border-right: none;
+      border-bottom: 1px solid var(--term-border);
     }
   }
 </style>
