@@ -135,8 +135,14 @@ const categoryData = [
     <!-- ─── Skills Grid (2-column) ─── -->
     <section class="term-grid-section">
       <div class="term-grid-border" id="skills-grid">
-        {skills.slice(0, 8).map((skill, idx) => (
-          <article class="term-skill-card" data-category={skill.category} data-skill-id={skill.id}>
+        {skills.map((skill, idx) => (
+          <article
+            class="term-skill-card"
+            data-category={skill.category}
+            data-skill-id={skill.id}
+            data-skill-name={skill.name.toLowerCase()}
+            data-skill-desc={skill.description.toLowerCase()}
+          >
             <div class="term-card-header">
               <div class="term-card-title-row">
                 <span class="term-card-number">{String(idx + 1).padStart(2, "0")}</span>
@@ -155,6 +161,41 @@ const categoryData = [
                 {skill.fileCount}f · {(skill.zipSize / 1024).toFixed(1)}KB · <span class="term-downloads">↓ {Math.floor(Math.random() * 500)}</span>
               </span>
             </div>
+
+            <div class="term-card-actions">
+              <button class="term-btn term-btn-ghost" data-modal-trigger={`modal-${skill.id}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                Ver
+              </button>
+              <a href={skill.downloadUrl} class="term-btn term-btn-primary" download>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                ZIP
+              </a>
+            </div>
+
+            <!-- Modal para esta skill -->
+            <dialog id={`modal-${skill.id}`} class="term-modal">
+              <div class="modal-wrapper">
+                <div class="modal-header">
+                  <div>
+                    <span class="modal-category">[{skill.category}]</span>
+                    <h2>{skill.name}</h2>
+                  </div>
+                  <button class="modal-close" data-modal-close={`modal-${skill.id}`} aria-label="Cerrar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <pre><code>{skill.body}</code></pre>
+                </div>
+                <div class="modal-footer">
+                  <a href={skill.downloadUrl} class="term-btn term-btn-primary term-btn-lg" download>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Descargar ({(skill.zipSize / 1024).toFixed(1)}KB)
+                  </a>
+                </div>
+              </div>
+            </dialog>
           </article>
         ))}
       </div>
@@ -184,8 +225,8 @@ const categoryData = [
       let visible = 0;
 
       cards.forEach((card) => {
-        const name = card.querySelector(".term-card-name")?.textContent?.toLowerCase() || "";
-        const desc = card.querySelector(".term-card-description")?.textContent?.toLowerCase() || "";
+        const name = card.getAttribute("data-skill-name") || "";
+        const desc = card.getAttribute("data-skill-desc") || "";
         const category = card.getAttribute("data-category") || "";
 
         const matchesSearch = !query || name.includes(query) || desc.includes(query);
@@ -199,6 +240,35 @@ const categoryData = [
       visibleCount.textContent = `${visible} results`;
     }
 
+    // Modal management
+    document.querySelectorAll<HTMLButtonElement>('[data-modal-trigger]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.getAttribute('data-modal-trigger')!;
+        const modal = document.getElementById(modalId) as HTMLDialogElement;
+        modal?.showModal();
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-modal-close]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.getAttribute('data-modal-close')!;
+        const modal = document.getElementById(modalId) as HTMLDialogElement;
+        modal?.close();
+        document.body.style.overflow = '';
+      });
+    });
+
+    document.querySelectorAll<HTMLDialogElement>('.term-modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.close();
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    // Search and filtering
     searchInput.addEventListener("input", applyFilters);
     searchInput.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
@@ -223,6 +293,13 @@ const categoryData = [
       if (e.key === "/" && document.activeElement !== searchInput) {
         e.preventDefault();
         searchInput.focus();
+      }
+    });
+
+    // ESC key for modals
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        document.body.style.overflow = '';
       }
     });
 
@@ -581,6 +658,158 @@ const categoryData = [
 
   .term-accent {
     color: var(--term-accent);
+  }
+
+  /* Card Actions */
+  .term-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .term-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--term-border);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--term-text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 150ms;
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .term-btn:hover {
+    border-color: var(--term-accent);
+    color: var(--term-accent);
+    background: rgba(57, 255, 20, 0.08);
+  }
+
+  .term-btn-primary {
+    border-color: var(--term-accent);
+    color: var(--term-bg);
+    background: var(--term-accent);
+  }
+
+  .term-btn-primary:hover {
+    background: var(--term-accent);
+    border-color: var(--term-accent);
+    box-shadow: 0 0 12px rgba(57, 255, 20, 0.3);
+  }
+
+  /* Modal */
+  .term-modal {
+    padding: 0;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    border: 1px solid var(--term-border);
+    background: var(--term-surf);
+    color: var(--term-text);
+    border-radius: 2px;
+    outline: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+  }
+
+  .term-modal::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 80vh;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px;
+    border-bottom: 1px solid var(--term-border);
+    gap: 12px;
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--term-text);
+    font-weight: 500;
+  }
+
+  .modal-category {
+    font-size: 10px;
+    color: var(--term-text-tertiary);
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid var(--term-border);
+    color: var(--term-text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 150ms;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--term-accent);
+    border-color: var(--term-accent);
+  }
+
+  .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  .modal-body pre {
+    margin: 0;
+    background: var(--term-bg);
+    border: 1px solid var(--term-border);
+    border-radius: 2px;
+    padding: 12px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--term-text-secondary);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px;
+    border-top: 1px solid var(--term-border);
+  }
+
+  .term-btn-lg {
+    padding: 10px 16px;
+    font-size: 12px;
   }
 
   /* Theme Variables */
