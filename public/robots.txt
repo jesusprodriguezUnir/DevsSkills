@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jesusprodriguezUnir.github.io/DevsSkills/sitemap-index.xml

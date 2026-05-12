@@ -1,19 +1,47 @@
 ---
 interface Props {
   title: string;
+  description?: string;
+  ogImage?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = "Catálogo interactivo de Skills para agentes de IA — descarga, explora y gestiona skills de OpenUP, utilidades y más.",
+  ogImage,
+} = Astro.props;
+
+const canonicalURL = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site)
+  : Astro.url;
+const ogImageURL = ogImage && Astro.site
+  ? new URL(ogImage, Astro.site).href
+  : undefined;
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Catálogo interactivo de Skills para agentes de IA — descarga, explora y gestiona skills de OpenUP, utilidades y más." />
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    {ogImageURL && <meta property="og:image" content={ogImageURL} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
+
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -191,7 +191,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
               zipSize={skill.zipSize}
               subdirs={skill.subdirs}
               body={skill.body}
-              bodyEs={skill.bodyEs}
+              bodyEs={skill.bodyEs ?? null}
               downloadUrl={skill.downloadUrl}
               image={skill.image}
               index={idx}
@@ -449,7 +449,7 @@ const totalSize = skills.reduce((acc, s) => acc + s.rawSize, 0);
     // Theme Toggle Logic
     const themeBtn = document.getElementById("theme-toggle");
 
-    function updateThemeIcon(theme) {
+    function updateThemeIcon(theme: string) {
       const sun = document.getElementById("sun-icon");
       const moon = document.getElementById("moon-icon");
       if (sun && moon) {
