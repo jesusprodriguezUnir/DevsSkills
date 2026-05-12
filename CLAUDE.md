@@ -37,6 +37,7 @@ Requires Node.js >=22.12.0.
 Skills are auto-categorized by directory name prefix:
 - `openup-*` → "OpenUP"
 - `dotnet-*` → ".NET Core"
+- `python-*` → "Python"
 - `pdf-*` → "Utilidades"
 - `skill-*` → "Meta"
 - anything else → "General"
@@ -60,6 +61,15 @@ compatibility: "1.0"  # optional
 ---
 ```
 Then run `npm run build:skills`. The ZIP and manifest entry are generated automatically. Skill directory name must be lowercase-with-hyphens (1–64 chars, no leading/trailing/consecutive hyphens) and must match the manifest `id`.
+
+**Optional enhancements per skill:**
+
+- **Spanish translation**: Add `skills/{skill-name}/SKILL_es.md` (frontmatter is ignored; only the body is used). When present, a language-toggle flag button appears in the modal.
+- **Preview image**: Place `public/images/skills/{skill-name}.png` to display a header image on the card.
+
+### Deployment & Base Path
+
+`astro.config.mjs` sets `base: '/DevsSkills'` for the GitHub Pages subpath. All asset URLs (downloads, images) are prefixed at build time in `index.astro` using `import.meta.env.BASE_URL`. Never hardcode `/downloads/` or `/images/` paths — always use the manifest URLs which are already resolved.
 
 ### Generated Files (not committed)
 
