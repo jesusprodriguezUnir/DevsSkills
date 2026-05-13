@@ -40,7 +40,7 @@ Skills are auto-categorized by directory name prefix:
 - `python-*` → "Python"
 - `pdf-*` → "Utilidades"
 - `skill-*` → "Meta"
-- anything else → "General"
+- anything else → "Front-end"
 
 ### Key Source Files
 

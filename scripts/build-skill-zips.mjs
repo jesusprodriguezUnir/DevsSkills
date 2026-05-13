@@ -61,7 +61,7 @@ function detectCategory(name) {
   if (name.startsWith('python-')) return 'Python';
   if (name.startsWith('pdf-')) return 'Utilidades';
   if (name.startsWith('skill-')) return 'Meta';
-  return 'General';
+  return 'Front-end';
 }
 
 /**

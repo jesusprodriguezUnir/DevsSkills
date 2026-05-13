@@ -156,12 +156,12 @@ El catálogo asigna automáticamente una categoría según el **prefijo del nomb
 | `python-*` | Python | 🐍 |
 | `pdf-*` | Utilidades | 🛠️ |
 | `skill-*` | Meta | ✨ |
-| *(otro)* | General | 📦 |
+| *(otro)* | Front-end | 📦 |
 
 **Ejemplo:**
 - `skills/openup-inception/` → categoría "OpenUP"
 - `skills/python-patterns/` → categoría "Python"
-- `skills/my-helper-tool/` → categoría "General"
+- `skills/my-helper-tool/` → categoría "Front-end"
 
 Elige el prefijo que mejor describe tu skill.
 
