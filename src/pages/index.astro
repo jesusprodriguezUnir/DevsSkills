@@ -173,7 +173,7 @@ const categoryData = [
               </a>
             </div>
 
-            <!-- Modal para esta skill -->
+            <!-- Modal con soporte bilingüe -->
             <dialog id={`modal-${skill.id}`} class="term-modal">
               <div class="modal-wrapper">
                 <div class="modal-header">
@@ -181,12 +181,31 @@ const categoryData = [
                     <span class="modal-category">[{skill.category}]</span>
                     <h2>{skill.name}</h2>
                   </div>
-                  <button class="modal-close" data-modal-close={`modal-${skill.id}`} aria-label="Cerrar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                  </button>
+                  <div class="modal-header-actions">
+                    {skill.bodyEs && (
+                      <button class="lang-toggle" data-target={`modal-${skill.id}`} data-lang="en" aria-label="Cambiar idioma" title="Ver en Español">
+                        <span class="flag-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 500" width="20" height="14" style="border-radius: 2px;">
+                            <rect width="750" height="500" fill="#c60b1e"/>
+                            <rect y="125" width="750" height="250" fill="#ffc400"/>
+                          </svg>
+                        </span>
+                      </button>
+                    )}
+                    <button class="modal-close" data-modal-close={`modal-${skill.id}`} aria-label="Cerrar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </button>
+                  </div>
                 </div>
                 <div class="modal-body">
-                  <pre><code>{skill.body}</code></pre>
+                  <div id={`content-en-${skill.id}`}>
+                    <pre><code>{skill.body}</code></pre>
+                  </div>
+                  {skill.bodyEs && (
+                    <div id={`content-es-${skill.id}`} style="display: none;">
+                      <pre><code>{skill.bodyEs}</code></pre>
+                    </div>
+                  )}
                 </div>
                 <div class="modal-footer">
                   <a href={skill.downloadUrl} class="term-btn term-btn-primary term-btn-lg" download>
@@ -264,6 +283,36 @@ const categoryData = [
         if (e.target === modal) {
           modal.close();
           document.body.style.overflow = '';
+        }
+      });
+    });
+
+    // Language toggle
+    document.querySelectorAll<HTMLButtonElement>('.lang-toggle').forEach(btn => {
+      const newBtn = btn.cloneNode(true) as HTMLButtonElement;
+      btn.parentNode?.replaceChild(newBtn, btn);
+      
+      newBtn.addEventListener('click', () => {
+        const modalId = newBtn.getAttribute('data-target')!;
+        const id = modalId.replace('modal-', '');
+        const currentLang = newBtn.getAttribute('data-lang');
+        
+        const contentEn = document.getElementById(`content-en-${id}`);
+        const contentEs = document.getElementById(`content-es-${id}`);
+        const flagSpan = newBtn.querySelector('.flag-icon')!;
+
+        if (currentLang === 'en') {
+          if (contentEn) contentEn.style.display = 'none';
+          if (contentEs) contentEs.style.display = 'block';
+          newBtn.setAttribute('data-lang', 'es');
+          newBtn.title = "View in English";
+          flagSpan.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="20" height="14" style="border-radius: 2px;"><clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="t"><path d="M30,15 h30 v15 z v-15 h-30 z h-30 v-15 z v15 h30 z"/></clipPath><g clip-path="url(#s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>';
+        } else {
+          if (contentEn) contentEn.style.display = 'block';
+          if (contentEs) contentEs.style.display = 'none';
+          newBtn.setAttribute('data-lang', 'en');
+          newBtn.title = "Ver en Español";
+          flagSpan.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 500" width="20" height="14" style="border-radius: 2px;"><rect width="750" height="500" fill="#c60b1e"/><rect y="125" width="750" height="250" fill="#ffc400"/></svg>';
         }
       });
     });
@@ -777,6 +826,39 @@ const categoryData = [
     background: rgba(255, 255, 255, 0.05);
     color: var(--term-accent);
     border-color: var(--term-accent);
+  }
+
+  .modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lang-toggle {
+    background: none;
+    border: 1px solid var(--term-border);
+    color: var(--term-text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 150ms;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .lang-toggle:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--term-accent);
+  }
+
+  .flag-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .modal-body {

@@ -38,7 +38,14 @@ const modalId = `modal-${id}`;
 const delay = Math.min(index * 50, 600);
 ---
 
-<div class="skill-card glass" style={`animation-delay: ${delay}ms`} data-category={category}>
+<div 
+  class="skill-card glass" 
+  style={`animation-delay: ${delay}ms`} 
+  data-category={category}
+  data-skill-id={id}
+  data-skill-name={name.toLowerCase()}
+  data-skill-desc={description.toLowerCase()}
+>
   {image && (
     <div class="card-image-container">
       <img src={image} alt={`Imagen de ${name}`} class="card-image" loading="lazy" width="360" height="160" />
