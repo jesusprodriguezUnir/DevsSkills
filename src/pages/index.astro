@@ -177,9 +177,12 @@ const categoryData = [
             <dialog id={`modal-${skill.id}`} class="term-modal">
               <div class="modal-wrapper">
                 <div class="modal-header">
-                  <div>
-                    <span class="modal-category">[{skill.category}]</span>
-                    <h2>{skill.name}</h2>
+                  <div class="modal-title-group">
+                    {skill.image && <img src={skill.image} class="modal-mini-image" alt="" />}
+                    <div>
+                      <span class="modal-category">[{skill.category}]</span>
+                      <h2>{skill.name}</h2>
+                    </div>
                   </div>
                   <div class="modal-header-actions">
                     {skill.bodyEs && (
@@ -625,6 +628,9 @@ const categoryData = [
     gap: 8px;
     border-right: 1px solid var(--term-border);
     border-bottom: 1px solid var(--term-border);
+    background: var(--term-bg);
+    position: relative;
+    overflow: hidden;
   }
 
   .term-skill-card:nth-child(odd) {
@@ -648,7 +654,7 @@ const categoryData = [
 
   .term-card-title-row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 8px;
     min-width: 0;
   }
@@ -799,6 +805,21 @@ const categoryData = [
     font-family: "JetBrains Mono", monospace;
     color: var(--term-text);
     font-weight: 500;
+  }
+
+  .modal-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .modal-mini-image {
+    width: 120px;
+    height: 120px;
+    border: 1px solid var(--term-border);
+    border-radius: 4px;
+    object-fit: cover;
+    background: #000;
   }
 
   .modal-category {

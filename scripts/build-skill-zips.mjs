@@ -152,6 +152,24 @@ async function main() {
     const zipPath = path.join(DOWNLOADS_DIR, `${skillName}.zip`);
     const zipSize = await zipDirectory(skillDir, zipPath);
 
+    // Image handling
+    let image = null;
+    const localImagePath = meta.image ? path.join(skillDir, meta.image) : path.join(skillDir, 'thumbnail.png');
+    const publicImagePath = path.join(ROOT, 'public', 'images', 'skills', `${skillName}.png`);
+
+    if (fs.existsSync(localImagePath)) {
+      // Copy local image to public folder
+      fs.mkdirSync(path.dirname(publicImagePath), { recursive: true });
+      fs.copyFileSync(localImagePath, publicImagePath);
+      image = `/images/skills/${skillName}.png`;
+    } else if (fs.existsSync(publicImagePath)) {
+      // Use existing global image
+      image = `/images/skills/${skillName}.png`;
+    } else if (meta.image && (meta.image.startsWith('http') || meta.image.startsWith('/'))) {
+      // Use external or absolute path from frontmatter
+      image = meta.image;
+    }
+
     const entry = {
       id: skillName,
       name: meta.name || skillName,
@@ -166,9 +184,7 @@ async function main() {
       body,
       bodyEs,
       downloadUrl: `/downloads/${skillName}.zip`,
-      image: fs.existsSync(path.join(ROOT, 'public', 'images', 'skills', `${skillName}.png`))
-        ? `/images/skills/${skillName}.png`
-        : null,
+      image,
     };
 
     manifest.push(entry);
