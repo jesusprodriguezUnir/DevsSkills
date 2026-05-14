@@ -446,6 +446,16 @@ git push origin fix-branch
 - **GitHub Repo:** https://github.com/jesusprodriguezUnir/DevsSkills/
 - **Live Catalog:** https://devs-skills.vercel.app (Vercel) o https://jesusprodriguezUnir.github.io/DevsSkills/ (GitHub Pages)
 
+### Skill Ecosystems & Inspiration
+
+Check these external registries for more ideas and to share your skills:
+
+- [Skills.sh](https://www.skills.sh/) — AI Agent Skills Registry
+- [Awesome Claude](https://awesomeclaude.ai/) — Curated Claude Resources
+- [AI Templates](https://aitmpl.com/) — Professional AI Prompt Templates
+- [Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook) — Official Claude patterns
+- [Claude.ai Docs](https://claude.ai/docs) — Official Documentation
+
 ---
 
 **Happy contributing! 🚀**

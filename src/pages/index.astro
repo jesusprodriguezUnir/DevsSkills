@@ -227,6 +227,42 @@ const categoryData = [
       </div>
     </section>
 
+    <!-- ─── External Ecosystem ─── -->
+    <section class="term-ecosystem-section">
+      <div class="term-prompt-line">
+        <span class="term-symbol">$</span>
+        <span class="term-grep-cmd">ls -la</span>
+        <span class="term-search-path">--external-resources</span>
+      </div>
+      
+      <div class="term-ecosystem-grid">
+        <a href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer" class="ecosystem-card">
+          <div class="ecosystem-header">
+            <span class="ecosystem-title">skills.sh</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </div>
+          <p class="ecosystem-desc">Registry of AI Agent Skills & Toolsets</p>
+        </a>
+
+        <a href="https://awesomeclaude.ai/" target="_blank" rel="noopener noreferrer" class="ecosystem-card">
+          <div class="ecosystem-header">
+            <span class="ecosystem-title">awesomeclaude.ai</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </div>
+          <p class="ecosystem-desc">Curated list of resources for Claude & Anthropic</p>
+        </a>
+
+        <a href="https://aitmpl.com/" target="_blank" rel="noopener noreferrer" class="ecosystem-card">
+          <div class="ecosystem-header">
+            <span class="ecosystem-title">aitmpl.com</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </div>
+          <p class="ecosystem-desc">Professional AI Prompt Templates & Components</p>
+        </a>
+
+      </div>
+    </section>
+
   </main>
 </Layout>
 
@@ -970,5 +1006,63 @@ const categoryData = [
       border-right: none;
       border-bottom: 1px solid var(--term-border);
     }
+  }
+
+  /* Ecosystem Styles */
+  .term-ecosystem-section {
+    padding: 24px 32px 40px;
+    border-top: 1px solid var(--term-border);
+    background: var(--term-bg);
+  }
+
+  .term-ecosystem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .ecosystem-card {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border: 1px solid var(--term-border);
+    background: var(--term-surf);
+    text-decoration: none;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ecosystem-card:hover {
+    border-color: var(--term-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .ecosystem-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: var(--term-accent);
+  }
+
+  .ecosystem-title {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .ecosystem-desc {
+    font-size: 12px;
+    color: var(--term-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    font-family: system-ui, sans-serif;
+  }
+
+  html[data-theme="light"] .ecosystem-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
 </style>

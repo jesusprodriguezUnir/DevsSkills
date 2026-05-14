@@ -1,4 +1,4 @@
-# Astro Starter Kit: Minimal
+# 🛠️ DevSkills Hub — SKILL.md Registry
 
 ```sh
 npm create astro@latest -- --template minimal
@@ -8,36 +8,44 @@ npm create astro@latest -- --template minimal
 
 ## 🚀 Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
+A curated registry of **SKILL.md** packages for AI Agents (Claude Code, .NET, Python, and more). This project provides a terminal-themed catalog to explore, download, and manage skills.
+
+## 🚀 Features
+
+- 🖥️ **Terminal Aesthetic:** Retro-tech UI built with Astro and Vanilla CSS.
+- 📦 **Auto-Packaging:** Skills are automatically bundled into ZIP files for easy distribution.
+- 🔍 **Smart Search:** Instant filtering by name, description, or category.
+- 🌍 **Multilingual:** Built-in support for English and Spanish content.
+- 🛠️ **Audit-Ready:** Plain text markdown files that are easy to review and version.
+
+## 📂 Project Structure
 
 ```text
 /
-├── public/
+├── skills/             # Source code for all skills
+├── public/             # Static assets (images, generated ZIPs)
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── data/           # Generated manifests
+│   └── pages/          # Main catalog UI
+└── docs/               # Project documentation
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
+## 🧞 Getting Started
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
 | `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm run dev`             | Starts local dev server & builds manifests       |
+| `npm run build`           | Build production site                            |
 
-## 👀 Want to learn more?
+## 🤝 Contributing
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Want to add your own skills? Check out our [Contributor Guide](./docs/contributor-guide.md).
+
+## 🌐 External Resources & Ecosystem
+
+Explore these related projects and registries:
+
+- **[Skills.sh](https://www.skills.sh/)** — AI Agent Skills Registry
+- **[Awesome Claude](https://awesomeclaude.ai/)** — Curated Claude Resources
+- **[AI Templates](https://aitmpl.com/)** — Professional AI Prompt Templates
